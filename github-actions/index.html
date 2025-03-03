@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="https://cyiut.cyu.fr/uas/iut/FAVICON/favicon-iut-cergypontoise_400x400px.png" />
+    <title> GitHub actions Consignes - TP</title>
+    <link
+      rel="stylesheet"
+      href="https://danyellow.net/cours-mmi/consignes.css"
+    />
+    <script src="https://danyellow.net/cours-mmi/consignes.js" defer></script>
+  </head>
+
+  <body>
+    <header class="entete-consignes">
+      <h1 class="h1">Consignes de la pratique - GitHub actions</h1>
+      <details class="consignes-conteneur">
+         <summary>
+          <h2 class="h1">Structure d'un fichier de configuration (cliquer pour afficher / cacher)</h2>
+        </summary>
+        <pre data-code-sample="true" style="font-family:monospace;color: rgb(197, 200, 198); background-color: rgb(29, 31, 33); font-weight: 400; padding: 1rem; border-radius: 0.5rem;"><span style="color: rgb(197, 200, 198); font-weight: 400;">name:</span> <span style="color: rgb(181, 189, 104); font-weight: 400;">My</span> <span style="color: rgb(181, 189, 104); font-weight: 400;">workflow</span> <span style="color: rgb(112, 120, 128); font-weight: 400;"># Facultatif. Affiché dans l'onglet "Actions" du dépôt. En absence, ça sera le nom du fichier qui sera affiché</span>
+<span style="color: rgb(197, 200, 198); font-weight: 400;">on:</span> [<span style="color: rgb(181, 189, 104); font-weight: 400;">push</span>] <span style="color: rgb(112, 120, 128); font-weight: 400;"># Obligatoire, permet de définir pour quel(s) évènement(s) se lance la pipeline. Il est possible de préciser la branche ou le type de fichier</span>
+<span style="color: rgb(197, 200, 198); font-weight: 400;">jobs:</span>
+  <span style="color: rgb(197, 200, 198); font-weight: 400;">my_first_job:</span> <span style="color: rgb(112, 120, 128); font-weight: 400;"># Obligatoire, job_id. Doit commencer par une lettre et ne doit pas contenir d'espace. Comme tout id, il doit être unique</span>
+    <span style="color: rgb(197, 200, 198); font-weight: 400;">name:</span> <span style="color: rgb(181, 189, 104); font-weight: 400;">My</span> <span style="color: rgb(181, 189, 104); font-weight: 400;">first</span> <span style="color: rgb(181, 189, 104); font-weight: 400;">job</span> <span style="color: rgb(112, 120, 128); font-weight: 400;"># Facultatif, nom du job, remplace le job_id si présent dans la pipeline</span>
+    <span style="color: rgb(197, 200, 198); font-weight: 400;">runs-on:</span> <span style="color: rgb(181, 189, 104); font-weight: 400;">ubuntu-latest</span> <span style="color: rgb(112, 120, 128); font-weight: 400;"># Obligatoire : Définit le type de machine à utiliser</span>
+    <span style="color: rgb(197, 200, 198); font-weight: 400;">steps:</span> <span style="color: rgb(112, 120, 128); font-weight: 400;"># Obligatoire : Contient la liste des tâches du job</span>
+      <span style="color: rgb(129, 162, 190); font-weight: 400;">-</span> <span style="color: rgb(197, 200, 198); font-weight: 400;">name:</span> <span style="color: rgb(181, 189, 104); font-weight: 400;">Say</span> <span style="color: rgb(181, 189, 104); font-weight: 400;">hello</span> <span style="color: rgb(181, 189, 104); font-weight: 400;">to</span> <span style="color: rgb(181, 189, 104); font-weight: 400;">me</span> <span style="color: rgb(112, 120, 128); font-weight: 400;"># Facultatif, nom de la tâche</span>
+        <span style="color: rgb(197, 200, 198); font-weight: 400;">run:</span> <span style="color: rgb(181, 189, 104); font-weight: 400;">printf</span> <span style="color: rgb(181, 189, 104); font-weight: 400;">"Hello $<span style="color: rgb(138, 190, 183); font-weight: 400;">{{ github.actor }}</span> ! 🥳"</span> <span style="color: rgb(112, 120, 128); font-weight: 400;"># Obligatoire, tâche à effectuer</span>
+      <span style="color: rgb(129, 162, 190); font-weight: 400;">-</span> <span style="color: rgb(197, 200, 198); font-weight: 400;">name:</span> <span style="color: rgb(181, 189, 104); font-weight: 400;">List</span> <span style="color: rgb(181, 189, 104); font-weight: 400;">files</span> <span style="color: rgb(181, 189, 104); font-weight: 400;">in</span> <span style="color: rgb(181, 189, 104); font-weight: 400;">the</span> <span style="color: rgb(181, 189, 104); font-weight: 400;">repository</span>
+        <span style="color: rgb(197, 200, 198); font-weight: 400;">run:</span> <span style="color: rgb(181, 189, 104); font-weight: 400;">|</span> <span style="color: rgb(112, 120, 128); font-weight: 400;"># Le pipe (|) permet d'écrire du texte multilignes</span>
+          <span style="color: rgb(181, 189, 104); font-weight: 400;">ls</span> <span style="color: rgb(181, 189, 104); font-weight: 400;">${{</span> <span style="color: rgb(181, 189, 104); font-weight: 400;">github.workspace</span> <span style="color: rgb(181, 189, 104); font-weight: 400;">}}</span></pre>
+        <ul>
+          <li>
+            <a href="https://docs.github.com/en/actions/writing-workflows/workflow-syntax-for-github-actions" target="_blank">Voir l'ensemble des clés d'un fichier de configuration - Ouverture dans un nouvel onglet</a>
+          </li>
+          <li>
+            <a href="https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/accessing-contextual-information-about-workflow-runs#github-context" target="_blank">Voir l'ensemble des variables accessibles par défaut - Ouverture dans un nouvel onglet</a>
+            <div class="note-information">
+                <p>Vous pouvez également afficher le contenu d'objets via la fonction "toJSON" dans un job. Exemple : <code>printf "${{toJSON(github)}}"</code></p>
+                <p>GitHub Actions propose également d'autres fonctions que vous pouvez utiliser dans votre pipeline.</p>
+                <ul>
+                    <li>
+                        <a href="https://docs.github.com/fr/actions/writing-workflows/choosing-what-your-workflow-does/evaluate-expressions-in-workflows-and-actions#functions" target="_blank" rel="noopener noreferrer">Voir liste fonctions GitHub Actions - Ouverture dans un nouvel onglet </a>
+                    </li>
+                </ul>
+            </div>
+          </li>
+          <li>
+            <a href="https://learnxinyminutes.com/yaml/" target="_blank" rel="noopener noreferrer">Voir cours très rapide sur le YAML - anglais - Ouverture dans un nouvel onglet</a>
+          </li>
+          <li>
+            <a href="https://actionsbyexample.com/" target="_blank" rel="noopener noreferrer">Voir cours rapide sur les GitHub Actions - anglais - Ouverture dans un nouvel onglet</a>
+          </li>
+        </ul>
+      </details>
+      <details class="consignes-conteneur" open>
+        <summary>
+          <h2 class="h1">Partie 1 (cliquer pour afficher / cacher)</h2>
+        </summary>
+        <ol class="liste-consignes">
+          <li>Créez un dépôt sur votre compte GitHub</li>
+          <li>
+            A l'aide du didacticiel sur les GitHub Actions. Ajoutez l'action en
+            exemple dans votre projet
+            <ul>
+              <li>
+                <a
+                  href="https://docs.github.com/fr/actions/writing-workflows/quickstart"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >Didacticiel sur les GitHub Actions - Ouverture dans un nouvel
+                  onglet</a
+                >
+              </li>
+            </ul>
+          </li>
+          <li>
+            Ajoutez une commande Linux de votre choix à votre fichier d'Actions et observez le résultat dans GitHub
+            <p class="note-information">
+              N'oubliez pas de commiter et pusher vos modifications, sinon, vous
+              ne verrez pas vos mises à jour.
+            </p>
+          </li>
+        </ol>
+        <p class="note-information">
+          Vos actions sont exécutées dans l'onglet "Actions" de votre dépôt.
+          Également accessible via l'URL :
+          https://github.com/votre-pseudo/nom-du-depot/actions
+        </p>
+        <div class="note-information">
+            <p>Si vous le souhaitez, vous pouvez installer l'extension gratuite de VS Code : GitHub Actions. En plus de proposer l'autocomplétion et la validation de vos fichiers de workflows, elle vous permet d'avoir une vue d'ensemble sur vos workflows depuis VS Code (à condition de lier votre compte GitHub).</p>
+            <ul>
+                <li>
+                    <a href="https://marketplace.visualstudio.com/items?itemName=GitHub.vscode-github-actions" target="_blank" rel="noopener noreferrer">Télécharger l'extension GitHub Actions pour VS Code</a>
+                </li>
+            </ul>
+        </div>
+      </details>
+      <details class="consignes-conteneur">
+        <summary>
+          <h2 class="h1">Partie 2 (cliquer pour afficher / cacher)</h2>
+        </summary>
+        <div class="note-importante">
+          <p>Pour cette partie, il est possible que le tag de branche soit bloqué. Pour régler
+          ce problème, allez dans les "Settings" de votre dépôt puis dans la
+          partie Actions > General > Workflow permissions, sélectionnez
+          "Read and write permissions" et sauvegardez.</p>
+          <div>
+            <img src="actions-2.png" alt="" srcset="">
+          </div>
+        </div>
+        <ol class="liste-consignes">
+          <li>
+            Remplacez le contenu du dépôt crée précédemment par un projet npm
+            (commande <code>npm init --y</code>).
+          </li>
+          <li>
+            Installez les dépendances suivantes :
+            <ul>
+              <li>
+                <a
+                  href="https://www.npmjs.com/package/release-it"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >release-it - Ouverture dans un nouvel onglet</a>
+                    <ul>
+                        <li>
+                            Pensez à sélectionner ".release-it.json" lors de
+                            l'installation avec la commande
+                            <code>npm init release-it</code>, sinon créez vous-même le
+                            fichier à la racine en <a href="https://github.com/release-it/release-it?tab=readme-ov-file#configuration" target="_blank">vous aidant de la documentation</a>
+                        </li>
+                    </ul>
+              </li>
+              <li>
+                <a
+                  href="https://www.npmjs.com/package/@release-it/conventional-changelog"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >@release-it/conventional-changelog - Ouverture dans un nouvel
+                  onglet</a
+                >
+              </li>
+            </ul>
+            <div class="note-information">
+              <p>
+                N'oubliez pas de mettre un fichier .gitignore à la racine de
+                votre projet. Les node_modules (ou tout autre fichier de
+                dépendances) n'ont rien à faire sur votre dépôt.
+              </p>
+              <p>
+                Si vous n'êtes pas à l'aise avec ce genre de fichiers, il en
+                existe déjà fait dans un dépôt dédié. Dans le cas de notre
+                projet, prenez celui de Node.
+              </p>
+              <ul>
+                <li>
+                  <a
+                    href="https://github.com/github/gitignore"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >Accéder à la liste de gitignore - Ouverture dans un nouvel
+                    onglet</a
+                  >
+                </li>
+              </ul>
+            </div>
+            <p class="note-attention">
+              Le module "release-it" a été pensé pour déployer sur npm. Nous
+              n'avons pas besoin de cette fonctionnalité et si nos identifiants
+              npm ne sont pas définis, vous serez bloqué(e). Pour éviter tout
+              bloquage, il faudra préciser au module qu'on souhaite juste
+              deployer sur git. De ce fait, vous devrez avoir la clé
+              "npm.publish" (c'est une imbrication de clés) avec la valeur
+              "false" dans le fichier .release-it.json.
+            </p>
+          </li>
+          <li>
+            Testez la tâche de release depuis la ligne de commandes, elle a été
+            ajoutée dans votre fichier package.json.
+            <div class="note-information">
+              <p>
+                Grâce au module "@release-it/conventional-changelog", vous allez
+                pouvoir générer un fichier CHANGELOG.md, ce fichier permet de
+                traquer toutes les releases que vous avez fait, version par
+                version en indiquant le détail de commits. Toutefois pour
+                générer correctement ce fichier, il faut respecter un certain
+                formattage de vos commits. En le respectant, il permettra au module release-it de savoir quel est
+                le prochain numéro de version (major, minor, patch) du projet.
+              </p>
+              <ul>
+                <li>
+                  <a
+                    href="https://github.com/angular/angular/blob/main/CONTRIBUTING.md#type"
+                    >Accéder au formattage de commit selon Angular</a
+                  >
+                </li>
+              </ul>
+              <p>
+                Mais pour faire simple, si votre commit commence par "feat:",
+                ceci incrémentera le numéro de minor : X.MINOR.X. Si votre
+                commit commence par "fix:", ceci incrémentera le numéro de patch
+                : X.X.PATCH. Il est bien évidemment possible d'avoir plusieurs
+                commits commençant par "feat:" ou "fix:" au sein de la même
+                version.
+                </p>
+               <p>Néanmoins, si vous ne souhaitez pas vous casser la tête avec ceci. Vous avez les modules <a href="https://www.npmjs.com/package/commitizen" target="_blank" rel="noopener noreferrer">commitizen</a> et <a href="https://github.com/streamich/git-cz" target="_blank" rel="noopener noreferrer">git-cz</a> (déconseillé de les installer en global). Une fois installés, vous aurez accès à la commande <code>npx cz</code> qui affichera un prompt vous permettant de préfixer votre commit et donc respecter la nomenclature Angular à chaque commit.</p>
+            </div>
+          </li>
+          <li>
+            Editez le fichier de pipeline crée précédemment ou créez-en un nouveau pour
+            effectuer une release de votre projet. Pour ce faire voici les
+            tâches que doit accomplir votre pipeline :
+            <ol>
+              <li>
+                Cloner le projet : <code>actions/checkout@v4</code>. C'est une
+                action prédéfinie, il faudra utiliser la clé "uses" à la place
+                de "run"
+                <ul>
+                    <li>
+                        <a href="https://github.com/sdras/awesome-actions?tab=readme-ov-file#official-actions" target="_blank" rel="noopener noreferrer">Voir curation de GitHub Actions - Ouverture dans un nouvel onglet</a>
+                    </li>
+                </ul>
+                <p>Exemple : </p>
+                <pre data-code-sample="true" style="font-family:monospace;color: rgb(197, 200, 198); background-color: rgb(29, 31, 33); font-weight: 400; padding: 1rem; border-radius: 0.5rem;" data-code-sample>
+<span style="color: rgb(112, 120, 128); font-weight: 400;"># [...]</span>
+<span style="color: rgb(197, 200, 198); font-weight: 400;">jobs:</span>
+  <span style="color: rgb(197, 200, 198); font-weight: 400;">build:</span>
+    <span style="color: rgb(197, 200, 198); font-weight: 400;">name:</span> <span style="color: rgb(181, 189, 104); font-weight: 400;">Build</span>
+    <span style="color: rgb(197, 200, 198); font-weight: 400;">runs-on:</span> <span style="color: rgb(181, 189, 104); font-weight: 400;">ubuntu-latest</span>
+    <span style="color: rgb(197, 200, 198); font-weight: 400;">steps:</span>
+      <span style="color: rgb(129, 162, 190); font-weight: 400;">-</span> <span style="color: rgb(197, 200, 198); font-weight: 400;">name:</span> <span style="color: rgb(181, 189, 104); font-weight: 400;">Check</span> <span style="color: rgb(181, 189, 104); font-weight: 400;">out</span> <span style="color: rgb(181, 189, 104); font-weight: 400;">repository</span> <span style="color: rgb(181, 189, 104); font-weight: 400;">code</span>
+        <span style="color: rgb(197, 200, 198); font-weight: 400;">uses:</span> <span style="color: rgb(181, 189, 104); font-weight: 400;">actions/checkout@v4</span>
+        <span style="color: rgb(197, 200, 198); font-weight: 400;">with:</span>
+          <span style="color: rgb(197, 200, 198); font-weight: 400;">fetch-depth:</span> <span style="color: rgb(204, 102, 102); font-weight: 400;">0</span>
+      <span style="color: rgb(129, 162, 190); font-weight: 400;">-</span> <span style="color: rgb(197, 200, 198); font-weight: 400;">uses:</span> <span style="color: rgb(181, 189, 104); font-weight: 400;">actions/setup-node@v4</span>
+        <span style="color: rgb(197, 200, 198); font-weight: 400;">with:</span>
+          <span style="color: rgb(197, 200, 198); font-weight: 400;">node-version:</span> <span style="color: rgb(181, 189, 104); font-weight: 400;">"&gt;=22"</span>
+      <span style="color: rgb(129, 162, 190); font-weight: 400;">-</span> <span style="color: rgb(197, 200, 198); font-weight: 400;">name:</span> <span style="color: rgb(181, 189, 104); font-weight: 400;">Set</span> <span style="color: rgb(181, 189, 104); font-weight: 400;">github</span> <span style="color: rgb(181, 189, 104); font-weight: 400;">user</span>
+        <span style="color: rgb(197, 200, 198); font-weight: 400;">run:</span> <span style="color: rgb(181, 189, 104); font-weight: 400;">git</span> <span style="color: rgb(181, 189, 104); font-weight: 400;">config</span> <span style="color: rgb(181, 189, 104); font-weight: 400;">user.email</span> <span style="color: rgb(181, 189, 104); font-weight: 400;">"test@example.com"</span> <span style="color: rgb(181, 189, 104); font-weight: 400;">&amp;&amp;</span> <span style="color: rgb(181, 189, 104); font-weight: 400;">git</span> <span style="color: rgb(181, 189, 104); font-weight: 400;">config</span> <span style="color: rgb(181, 189, 104); font-weight: 400;">user.name</span> <span style="color: rgb(181, 189, 104); font-weight: 400;">"CI/CD - MMI"</span>
+      <span style="color: rgb(112, 120, 128); font-weight: 400;"># ...</span></pre>
+            <p class="note-attention">
+                L'argument "fetch-depth: 0" de l'action "actions/checkout@v4" permet de récupérer tout l'historique du dépôt, évitant ainsi des pertes si jamais vous faites un pull après vos commits. N'oubliez pas ce paramètre.
+            </p>
+              </li>
+              <li>
+                Installer des dépendances : <code>npm ci</code> ("ci" fait un
+                "clean install")
+                <p class="note-information">La commande <code>npm ci</code> ne fonctionnera pas s'il n'y a pas de fichier "package-lock.json" dans le projet. Pensez bien à le générer avec la commande <code>npm i(nstall)</code> s'il n'est pas présent.</p>
+              </li>
+              <li>
+                Définir l'utilisateur git :
+                <code>git config user.email / user.name</code>.
+                <p>Note : Il n'est pas nécessaire de mettre une vraie adresse
+                    e-mail et nom d'utilisateur</p>
+                <p>Note 2 : Cette commande n'est utile que si nous avons besoin de faire des commmandes git. En l'occurence, faire un <code>git tag</code> avec le module release-it.</p>
+              </li>
+              <li>
+                Définir une version de node supérieure ou égale à la version 20 grâce à l'action "setup-node"
+                <ul>
+                    <li>
+                        <a href="https://github.com/actions/setup-node" target="_blank" rel="noopener noreferrer">Voir documentation de l'action "setup-node"</a>
+                    </li>
+                </ul>
+              </li>
+              <li>
+                Mettre à jour la version : <code>npm run release --ci</code> (c'est à vous d'ajouter cette commande, voir documentation de release-it)
+                <p class="note-information">
+                    Vous pouvez, exécuter la commande <code>npm run release -- --no-git --debug --dry-run</code> en local, pour prévisualiser ce que la commande va faire. Évitant ainsi de créer plein de tags inutiles.
+                </p>
+              </li>
+            </ol>
+            <div class="note-attention">
+              <p>
+                On veut que cette pipeline se lance manuellement, ainsi
+                l'évènement (clé "on") devra être "workflow_dispatch". Voir
+                image ci-dessous pour lancer manuellement votre Action depuis l'interface de GitHub.
+              </p>
+              <figure>
+                <img src="actions-1.jpg" alt="" />
+              </figure>
+              <ul>
+                <li>
+                  <a
+                    href="https://docs.github.com/fr/actions/writing-workflows/choosing-when-your-workflow-runs/events-that-trigger-workflows"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >Voir liste des évènements - Ouverture dans un nouvel
+                    onglet</a
+                  >
+                </li>
+              </ul>
+            </div>
+          </li>
+        </ol>
+      </details>
+      <details class="consignes-conteneur">
+        <summary>
+          <h2 class="h1">Partie 3 (cliquer pour afficher / cacher)</h2>
+        </summary>
+        <div class="note-information">
+          <p>
+            Pour cette dernière partie, vous allez déployer, grâce à votre pipeline,
+            le build du projet contenu dans le dossier "partie-3", c'est un site
+            web en html utilisant vite pour tailwind ou encore la gestion des
+            modules javascript.
+          </p>
+          <p>
+            A noter que pour déployer via la CI/CD, il vous faut un hébergeur
+            qui vous permet de vous connecter en SSH. Si
+            vous n'en avez pas, sachez qu'Alwaysdata vous le permet. Il faudra penser à définir un mot de passe pour votre compte SSH depuis l'interface d'administration.
+          </p>
+          <p>
+            Pour copier vos données depuis votre pipeline vers votre serveur, le plus simple est d'utiliser la commande <code>rsync</code> en SSH.
+          </p>
+          <ul>
+            <li>
+                <a href="https://doc.ubuntu-fr.org/rsync" target="_blank" rel="noopener noreferrer">Voir documentation de la commande rsync - ouverture dans un nouvel onglet</a>
+            </li>
+          </ul>
+          <p>
+            N'oubliez pas que sur un serveur, la racine est le dossier www, n'allez pas tout copier n'importe où.
+          </p>
+        </div>
+        <p class="note-attention">L'utilisation de la commande <code>rsync</code> fonctionne, mais elle n'est pas des plus optimale. Dans une pipeline CI/CD "parfaite", on générera plutôt une image Docker qui sera uploadée sur le serveur de production.</p>
+        <ol class="liste-consignes">
+          <li>
+            Créez un nouveau dépôt ou remplacez le contenu de votre dépôt
+            existant avec le contenu du dossier "partie-3"
+          </li>
+          <li>
+            Définissez une CI/CD permettant les actions suivantes :
+            <ul>
+              <li>Lint le code javascript</li>
+              <li>Exécute les tests unitaires
+                <p class="note-information">Le projet utilise vitest au lieu de jest. Vitest possède l'avantage de s'intégrer plus facilement avec vite que jest. Le fonctionnement reste le même dans l'ensemble notamment au niveau des méthodes de test.</p>
+              </li>
+              <li>Exécute les tests e2e
+                <div class="note-information">
+                    <p>Il faut exécuter l'outil de e2e en mode CI (headless) surtout pas en mode UI.</p>
+                    <ul>
+                        <li>
+                            <a href="https://playwright.dev/docs/ci-intro" target="_blank">Voir documentation sur playwright en mode headless - Ouverture dans un nouvel onglet</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="note-attention">
+                    <p>
+                        Les tests e2e peuvent prendre <span class="texte-gras">beaucoup</span> de temps car toutes les configurations (projects) sont testés pour chaque test (ici trois "projects") et ils ne sont pas parallelisés. Pour éviter de dépasser votre quota de temps de CI/CD, précisez un des "projects" listé dans le fichier "playwright.config.js" (clé "projects") grâce au paramètre "--project=PROJECT_NAME".
+                    </p>
+                    <p>Certains tests ont été taggués en "@smoke", vous pouvez exécuter des tests par tag grâce au paramètre --grep.</p>
+                    <div class="inner-note">
+                        <p>Les smoke tests (ou tests de fumée) désignent des tests automatisés (ou non) préliminaires. Testant des fonctionnalités critiques, s'ils échouent, il est inutile de lancer les autres tests.</p>
+                    </div>
+                    <p>Ainsi, il est préférable de lancer en premier les smoke tests et s'ils passent exécuter le reste. Ce qui permet de diminuer le temps d'exécution du serveur de CI/CD.</p>
+
+                    <ul>
+                        <li>
+                            <a href="https://playwright.dev/docs/test-annotations#tag-tests" target="_blank" rel="noopener noreferrer">Voir documentation sur les tests par tag - Ouverture dans un nouvel onglet</a>
+                        </li>
+                        <li>
+                            <a href="https://glossary.istqb.org/en_US/term/smoke-test" target="_blank" rel="noopener noreferrer">Voir définition (anglais) de smoke tests selon International Software Testing Qualifications Board (ISTQB) - Ouverture dans un nouvel onglet</a>
+                        </li>
+                        <li>
+                            <a href="https://developer.mozilla.org/fr/docs/Glossary/Smoke_Test" target="_blank" rel="noopener noreferrer">Voir définition de smoke tests sur mdn - Ouverture dans un nouvel onglet</a>
+                        </li>
+                    </ul>
+                    <p>Cette stratégie de tests est un patron de conception plus communément appelé le <a href="https://en.wikipedia.org/wiki/Fail-fast_system" target="_blank">"fail fast"</a>, l'idée étant de lever le plus rapidement une erreur pour éviter de perdre trop de temps avec l'exécution d'autres fonctions.</p>
+                </div>
+            </li>
+              <li>Créez des variables d'environnement affichant les données suivantes sur le site :
+                <ul>
+                    <li>Le nom du compte GitHub de la personne qui a initié la dernière pipeline</li>
+                    <li>La date et heure du build</li>
+                </ul>
+                <div class="note-information">
+                    <p>
+                        Pour rappel, le nom de la personne qui a exécuté la pipeline est contenu dans "github.actor". N'oubliez pas que vite ne lira pas votre variable si elle ne commence pas par "VITE_".
+                    </p>
+                    <ul>
+                        <li>
+                            <a href="https://www.cyberciti.biz/faq/linux-unix-formatting-dates-for-display/" target="_blank" rel="noopener noreferrer">Voir formattage des dates sous Linux - Ouverture dans un nouvel onglet</a>
+                        </li>
+                        <li>
+                            <a href="https://docs.github.com/fr/actions/writing-workflows/choosing-what-your-workflow-does/store-information-in-variables" target="_blank" rel="noopener noreferrer">Voir documentation des variables d'environnement - Ouverture dans un nouvel onglet</a>
+                        </li>
+                    </ul>
+
+                </div>
+                <p class="note-attention">Pensez à tester ceci localement avant d'essayer sur la CI/CD.</p>
+            </li>
+              <li>Build le projet</li>
+              <li>
+                Déploie le tout sur votre serveur
+                <div class="note-information">
+                    <p>Comme dit plus haut, vous allez devoir utiliser la commande <code>rsync</code>. Elle possède l'avantage de ne transférer que les fichiers qui ont été modifiés ce qui permet d'économiser la bande passante.</p>
+                    <p>Toutefois avant d'utiliser la commande, il faut impérativement que votre accès soit autorisé sur le serveur de production. La méthode la plus aisée est d'autoriser votre clé ssh sur le serveur de production, ceci se fait via la commande <code>ssh-copy-id</code>, elle n'est à faire qu'une seule fois, elle va ajouter vos clefs publiques (extension .pub) dans le registre "authorized_keys" du serveur avec lequel vous souhaitez établir une connexion. Une fois fait, vous pourrez faire un <code>rsync</code> en ssh sans entrer le mot de passe à chaque fois. Rappelons que GitHub Actions ne permet pas de saisir des prompts. Toutes les commandes doivent être pré-remplies.</p>
+                    <p>Puis vous devrez ajouter votre clé privée parmi les secrets de votre dépôt.</p>
+
+                    <p class="texte-gras">Générer une clé SSH (si vous n'en avez pas) (à faire dans votre terminal)</p>
+                    <ul>
+                        <li>
+                            <a href="https://docs.github.com/fr/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent" target="_blank" rel="noopener noreferrer">Voir didacticiel sur la génération de clé SSH</a>
+                        </li>
+                    </ul>
+                    <p class="note-information">Vous pouvez voir le nom de vos clés ssh (indispensable pour la copier) avec la commande <code>ls -al ~/.ssh</code>. Elles commencent par "id_".</p>
+                    <p class="texte-gras">Ajouter sa clé ssh à un serveur (à faire dans votre terminal)</p>
+                    <ol>
+                        <li><code>ssh-copy-id user@server</code>
+                            <div class="note-attention">
+                                <p>Attention la commande copie <span class="texte-gras">toutes</span> vos clefs publiques, si vous souhaitez préciser quelles clés vous souhaitez copier, il faut passer le paramètre -i suivi du nom de la clé publique (fichier avec extension .pub).</p>
+                            </div>
+                        </li>
+                        <li>Entrez le mot de passe ssh du serveur qui doit vous autoriser</li>
+                        <li>Et voilà</li>
+                    </ol>
+                  <p class="texte-gras">Ajouter la clé ssh aux secrets du dépôt (à faire dans votre terminal)</p>
+                  <ol>
+                    <li>Copiez votre clé privée (fichier sans l'extension .pub)
+                        <div class="tab-wrapper" role="tablist">
+                            <ul class="list-tabs">
+                                <li>
+                                    <button class="select-tab" data-tab-name="windows">Windows</button>
+                                </li>
+                                <li>
+                                    <button class="select-tab" data-tab-name="linux-macos">Linux / macOS</button>
+                                </li>
+                            </ul>
+                            <ul class="list-tab-content">
+                                <li class="tab-content" data-tab-content="windows">
+                                    <pre data-code-sample style="font-family:monospace;color: rgb(197, 200, 198); background-color: rgb(29, 31, 33); font-weight: 400; padding: 1rem; border-radius: 0.5rem;"><span style="color: rgb(112, 120, 128); font-weight: 400;"># Copie votre clé privée dans le presse-papier</span>
+<span style="color: rgb(222, 147, 95); font-weight: 400;">cat</span> ~/.ssh/my_private_key | clip
+<span style="color: rgb(112, 120, 128); font-weight: 400;"># Ou </span>
+<span style="color: rgb(222, 147, 95); font-weight: 400;">cat</span> ~/.ssh/my_private_key
+<span style="color: rgb(112, 120, 128); font-weight: 400;"># Vous copierez vous-même la clé qui sera affichée dans le terminal</span></pre>
+<p>Note : Il faut impérativement que git bash soit installé sur votre ordinateur Windows, car "cat" est une commande unix.</p>
+                                </li>
+                                <li class="tab-content" data-tab-content="linux-macos">
+<pre data-code-sample style="font-family:monospace;color: rgb(197, 200, 198); background-color: rgb(29, 31, 33); font-weight: 400; padding: 1rem; border-radius: 0.5rem;"><span style="color: rgb(112, 120, 128); font-weight: 400;"># Copie votre clé privée dans le presse-papier</span>
+<span style="color: rgb(222, 147, 95); font-weight: 400;">pbcopy</span> &lt; ~/.ssh/my_private_key</pre>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>Sur GitHub, dans le dépôt, allez dans Settings > Secrets and Variables > Actions. Ajoutez un nouveau "repository secret", appelez-le comme vous le souhaitez et collez comme valeur votre clé privée</li>
+
+                  </ol>
+                  <p class="texte-gras">Effectuer un <code>rsync</code> en ssh (à faire dans votre fichier yml)</p>
+                  <ol>
+                    <li>
+                      <p>Ajoutez votre clé privée dans un fichier dans le conteneur Docker</p>
+                      <code>echo "ssh_key" > __ssh_key_path__ && chmod 400 __ssh_key_path__</code>
+                      <div class="note-information">
+                        <p>Note : Si vous souhaitez mettre votre fichier ssh dans un sous-dossier, il faudra le créer en avance avec les commandes <code>mkdir</code> et <code>touch</code>. Exemple <code>mkdir -p ~/.ssh && touch ~/.ssh/deploy_key</code> </p>
+                        <p>Note 2 : Vous devez laisser les guillemets autour de "ssh_key" quand vous remplacerez la valeur par un secret.</p>
+                      </div>
+                    </li>
+                    <li>
+                      <p>Déplacez le contenu du dossier vers un serveur (commande à adapter)</p>
+                      <code>rsync -Pav -e "ssh -i __ssh_key_path__  -o StrictHostKeyChecking=no" source/ user@server:destination</code>
+                      <div class="note-information">
+                        <p><code>rsync</code> permet également de synchroniser un seul fichier ou encore exclure des dossiers.</p>
+                        <ul>
+                          <li>
+                            <a href="https://doc.ubuntu-fr.org/rsync" target="_blank" rel="noopener noreferrer">Voir documentation de la commande rsync - ouverture dans un nouvel onglet</a>
+                          </li>
+                        </ul>
+                        <p>Note : La présence de la barre oblique après le dossier source copie le contenu du dossier source dans la destination. En son absence, <code>rsync</code> créera un dossier dans la source. Faites attention.</p>
+                        <p>Note 2 : Par défaut <code>rsync</code> ne supprime pas les fichiers du dossier de destination qui se trouvent dans le dossier source. Néanmoins, vous pouvez changer ce comportement avec le paramètre <code>--delete-after</code>.</p>
+                      </div>
+                    </li>
+                  </ol>
+                  <div class="note-attention">
+                    <p>Pour des questions de sécurité, les paramètres suivants doivent être mis en secret. Menu Settings > Secrets and variables > Actions > Repository secrets sur GitHub</p>
+                    <ul>
+                      <li>user</li>
+                      <li>server</li>
+                      <li>ssh_key</li>
+                    </ul>
+                  </div>
+                </div>
+              </li>
+            </ul>
+            <div class="note-information">
+                <p>Cette partie contient beaucoup de lignes de commandes, si elles vous sont étrangères, vous avez le site explainshell qui vous explique en détails les commandes.</p>
+                <ul>
+                    <li>
+                        <a href="https://explainshell.com/" target="_blank" rel="noopener noreferrer">Accéder à explainshell</a>
+                    </li>
+                </ul>
+                <p>Ou sinon vous avez la commande man suivi de l'instruction ou le site <a href="https://www.man7.org/linux/man-pages/index.html" target="_blank">man</a>.</p>
+            </div>
+            <div class="note-information">
+                <p>A ce stade, votre pipeline CI/CD contient beaucoup de tâches. Rappelez-vous que les jobs de build et de déploiement sont interdépendants et qu'il faut que les autres jobs soient effectués avant.</p>
+                <ul>
+                    <li>
+                        <a href="https://docs.github.com/en/actions/writing-workflows/workflow-syntax-for-github-actions#jobsjob_idneeds" target="_blank" rel="noopener noreferrer">Voir documentation sur l'interdépendance des jobs</a>
+                    </li>
+                </ul>
+                <p>Parallèlement, il est préférable de faire un job pour le build et un autre pour le déploiement pour faciliter le debbugage. Dans ce contexte, il faudra uploader et télécharger un "artifact". Pour rappel, vous avez les actions <a href="https://github.com/actions/upload-artifact" target="_blank">"actions/upload-artifact@master"</a> et <a href="https://github.com/actions/download-artifact" target="_blank">"actions/download-artifact@master"</a> pour communiquer entre jobs</p>
+                <details>
+                    <summary>
+                        Exemple actions/upload-artifact@master
+                    </summary>
+<pre data-code-sample="true" style="font-family:monospace;color: rgb(197, 200, 198); background-color: rgb(29, 31, 33); font-weight: 400; padding: 1rem; border-radius: 0.5rem;"><span style="color: rgb(197, 200, 198); font-weight: 400;">build:</span>
+  <span style="color: rgb(197, 200, 198); font-weight: 400;">runs-on:</span> <span style="color: rgb(181, 189, 104); font-weight: 400;">ubuntu-latest</span>
+  <span style="color: rgb(197, 200, 198); font-weight: 400;">steps:</span>
+    <span style="color: rgb(112, 120, 128); font-weight: 400;"># [...]</span>
+    <span style="color: rgb(129, 162, 190); font-weight: 400;">-</span> <span style="color: rgb(197, 200, 198); font-weight: 400;">name:</span> <span style="color: rgb(181, 189, 104); font-weight: 400;">Create</span> <span style="color: rgb(181, 189, 104); font-weight: 400;">build</span>
+      <span style="color: rgb(197, 200, 198); font-weight: 400;">run:</span> <span style="color: rgb(181, 189, 104); font-weight: 400;">npm</span> <span style="color: rgb(181, 189, 104); font-weight: 400;">run</span> <span style="color: rgb(181, 189, 104); font-weight: 400;">build</span>
+    <span style="color: rgb(129, 162, 190); font-weight: 400;">-</span> <span style="color: rgb(197, 200, 198); font-weight: 400;">name:</span> <span style="color: rgb(181, 189, 104); font-weight: 400;">Generate</span> <span style="color: rgb(181, 189, 104); font-weight: 400;">artifact</span>
+      <span style="color: rgb(197, 200, 198); font-weight: 400;">uses:</span> <span style="color: rgb(181, 189, 104); font-weight: 400;">actions/upload-artifact@master</span>
+      <span style="color: rgb(197, 200, 198); font-weight: 400;">with:</span>
+        <span style="color: rgb(197, 200, 198); font-weight: 400;">name:</span> <span style="color: rgb(181, 189, 104); font-weight: 400;">bundle</span> <span style="color: rgb(112, 120, 128); font-weight: 400;"># Name of artifact to upload</span>
+        <span style="color: rgb(197, 200, 198); font-weight: 400;">path:</span> <span style="color: rgb(181, 189, 104); font-weight: 400;">./dist</span> <span style="color: rgb(112, 120, 128); font-weight: 400;"># Name of the directory/file to upload</span></pre>
+                </details>
+                <details>
+                    <summary>
+                        Exemple actions/download-artifact@master
+                    </summary>
+<pre data-code-sample="true" style="font-family:monospace;color: rgb(197, 200, 198); background-color: rgb(29, 31, 33); font-weight: 400; padding: 1rem; border-radius: 0.5rem;"><span style="color: rgb(197, 200, 198); font-weight: 400;">build:</span>
+  <span style="color: rgb(197, 200, 198); font-weight: 400;">runs-on:</span> <span style="color: rgb(181, 189, 104); font-weight: 400;">ubuntu-latest</span>
+  <span style="color: rgb(197, 200, 198); font-weight: 400;">needs:</span> [<span style="color: rgb(181, 189, 104); font-weight: 400;">build</span>] <span style="color: rgb(112, 120, 128); font-weight: 400;"># Related job</span>
+  <span style="color: rgb(197, 200, 198); font-weight: 400;">steps:</span>
+    <span style="color: rgb(112, 120, 128); font-weight: 400;"># [...]</span>
+    <span style="color: rgb(129, 162, 190); font-weight: 400;">-</span> <span style="color: rgb(197, 200, 198); font-weight: 400;">name:</span> <span style="color: rgb(181, 189, 104); font-weight: 400;">Download</span> <span style="color: rgb(181, 189, 104); font-weight: 400;">artifact</span>
+      <span style="color: rgb(197, 200, 198); font-weight: 400;">uses:</span> <span style="color: rgb(181, 189, 104); font-weight: 400;">actions/download-artifact@master</span>
+      <span style="color: rgb(197, 200, 198); font-weight: 400;">with:</span>
+        <span style="color: rgb(197, 200, 198); font-weight: 400;">name:</span> <span style="color: rgb(181, 189, 104); font-weight: 400;">bundle</span> <span style="color: rgb(112, 120, 128); font-weight: 400;"># Name of artifact to download</span></pre>
+        </details>
+            </div>
+          </li>
+        </ol>
+      </details>
+      <details class="consignes-conteneur">
+        <summary>
+          <h2 class="h1">Pour aller plus loin (cliquer pour afficher / cacher)</h2>
+        </summary>
+        <ol class="liste-consignes">
+          <li>Après avoir réalisé une ou plusieurs des fonctionnalités suivantes. Ajoutez le module release-it (utilisé dans la partie 2) dans la CI/CD du projet de la partie 3.
+            <ul>
+                <li>Charger les données du Pokédex lié au Pokémon affiché</li>
+                <li>Faire défiler la page jusqu'au Pokémon présentement affiché dans la modale</li>
+                <li>Afficher le nom étranger des Pokémon</li>
+                <li>Proposer un système de recherche</li>
+                <li>Afficher le numéro de dex du Pokémon en fonction des régions</li>
+                <li>Permettre de charger la fiche d'un Pokémon en fonction de son nom en plus de son id</li>
+                <li>Grâce au module wavesurfer.js, afficher le spectre sonore du cri du Pokémon courant</li>
+            </ul>
+            <p class="note-information">N'oubliez pas de préfixer un de vos commits avec "feat:" pour que release-it incrémente le numéro de MINOR.</p>
+          </li>
+      </details>
+    </header>
+  </body>
+</html>
