@@ -33,6 +33,7 @@ const pkdexTemplateRaw = document.querySelector("[data-tpl-id='pokedex']");
 const generationShortcutTemplateRaw = document.querySelector("[data-tpl-id='generation-shortcut-link']");
 const marqueeTypeTextTemplateRaw = document.querySelector("[data-tpl-id='marquee-type-text']");
 const marqueeTypeContainerTemplateRaw = document.querySelector("[data-tpl-id='marquee-type-container']");
+const pkmnTypeBubbleTemplateRaw = document.querySelector("[data-tpl-id='pokemon-type-bubble']");
 
 const pokedexContainer = document.querySelector("[data-list-pokedex]");
 
@@ -243,7 +244,7 @@ const loadPokedexForGeneration = async (generation = 1, triggerElement) => {
 
             const encodedData = window.btoa(
                 loadingImageRaw.replaceAll(
-                    "#037ef3", 
+                    "#037ef3",
                     window.getComputedStyle(document.body).getPropertyValue(`--type-${cleanString(item.types[0].name)}`)
                 )
             );
@@ -266,6 +267,31 @@ const loadPokedexForGeneration = async (generation = 1, triggerElement) => {
             aTag.classList.add(...[
                 typesAnimatedBorderColor[`${cleanString(item.types[0].name)}_${cleanString(item.types[1]?.name || item.types?.[0].name)}`]
             ]);
+            const typesList = document.createElement('ul');
+            typesList.classList.add('flex', 'gap-1', 'mt-1', 'types-list');
+            typesList.setAttribute('data-types-list', '');
+
+
+            item.types.forEach((type) => {
+                const typeBubble = document.importNode(pkmnTypeBubbleTemplateRaw.content, true);
+                const li = typeBubble.querySelector('li');
+                const typeSpan = typeBubble.querySelector('span');
+                const typeImg = typeBubble.querySelector('img');
+               
+                li.style.backgroundColor = `var(--type-${cleanString(type.name)})`;
+                li.setAttribute('aria-label', `Type ${type.name}`);
+                typeSpan.textContent = type.name;
+               
+                typeImg.alt = `icône type ${type.name}`;
+                replaceImage(typeImg, type.image);
+               
+                typesList.appendChild(typeBubble);
+            });
+
+
+            aTag.appendChild(typesList);
+
+
             aTag.addEventListener("click", loadDetailsModal);
             aTag.addEventListener("mouseover", generateMarqueeTypes);
             aTag.addEventListener("focus", generateMarqueeTypes);
