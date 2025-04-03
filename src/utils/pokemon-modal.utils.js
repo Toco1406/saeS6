@@ -90,7 +90,7 @@ export const createAlternateForm = (template, data, event) => {
     url.searchParams.set("id", data.pokedex_id);
     const imgTag = template.querySelector("img");
     replaceImage(imgTag, data.sprite);
-    imgTag.alt = `sprite de ${data.name.fr} forme ${data.region}`;
+    imgTag.alt = `sprite de ${data.name.en} forme ${data.region}`;
     imgTag.fetchPriority = "low";
     template.querySelector("[data-pkmn-name]").textContent = `${data.name.fr}`;
 

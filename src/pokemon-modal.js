@@ -107,7 +107,8 @@ listTypes = listTypes.map((item) => ({
     sprite: item.sprites,
     name: {
         fr: cleanString(item.name.fr),
-        en: cleanString(item.name.en)
+        en: cleanString(item.name.en),
+        jp: cleanString(item.name.jp),
     },
 }));
 
@@ -344,10 +345,11 @@ displayModal = async (pkmnData) => {
     modal.style.setProperty("--background-sprite", `url("${pkmnExtraData.sprites.other["official-artwork"].front_default}")`);
     replaceImage(modal_DOM.img, pkmnData.sprites.regular);
     modal_DOM.img.alt = `sprite de ${pkmnData.name.fr}`;
+    
 
     modal.setAttribute("aria-labelledby", `Fiche détail de ${pkmnData.name.fr}`);
 
-    modal_DOM.pkmnName.textContent = `#${String(pkmnData.pokedex_id).padStart(NB_NUMBER_INTEGERS_PKMN_ID, '0')} ${pkmnData.name.fr}`;
+    modal_DOM.pkmnName.textContent = `#${String(pkmnData.pokedex_id).padStart(NB_NUMBER_INTEGERS_PKMN_ID, '0')} ${pkmnData.name.fr}, ${pkmnData.name.en}, ${pkmnData.name.jp}`;
     document.title = `${modal_DOM.pkmnName.textContent} - ${initialPageTitle}`;
 
     if (listDescriptions?.is_legendary || listDescriptions?.is_mythical) {
