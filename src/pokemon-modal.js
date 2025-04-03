@@ -38,6 +38,8 @@ import loadingImageRaw from "/images/loading.svg?raw";
 
 const closeModalBtn = document.querySelector("[data-close-modal]");
 const modal = document.querySelector("[data-pokemon-modal]");
+const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+const originalThemeColor = metaThemeColor.getAttribute("content");
 
 const pkmnSensibilityTemplateRaw = document.querySelector(
     "[data-tpl-id='pokemon-sensibility']"
@@ -149,6 +151,8 @@ modal.addEventListener("close", async (e) => {
     modal_DOM.img.src = loadingImage;
     modal_DOM.img.alt = "";
     setTitleTagForGeneration();
+    
+    metaThemeColor.setAttribute("content", originalThemeColor);
 });
 
 modal.addEventListener("transitionend", (e) => {
@@ -164,6 +168,7 @@ closeModalBtn.addEventListener("click", () => {
     modal.style.removeProperty('translate');
     modal.style.removeProperty('opacity');
     modal.style.setProperty("--animation-speed", initialModalSpeed);
+    metaThemeColor.setAttribute("content", originalThemeColor);
     modal.close();
 });
 
@@ -411,6 +416,8 @@ displayModal = async (pkmnData) => {
     modal.style.setProperty("--bg-modal-color", firstBorderColor);
     modal.style.setProperty("--dot-color-1", firstBorderColor);
     modal.style.setProperty("--dot-color-2", secondaryBorderColor ? secondaryBorderColor : firstBorderColor);
+    
+    metaThemeColor.setAttribute("content", firstBorderColor);
 
     modal.querySelector("[data-top-infos]").style.borderImage = `linear-gradient(to right, ${firstBorderColor} 0%, ${firstBorderColor} 50%, ${secondaryBorderColor ? secondaryBorderColor : firstBorderColor} 50%, ${secondaryBorderColor ? secondaryBorderColor : firstBorderColor} 100%) 1`;
     const descriptionsContainer = modal.querySelector("dl");
@@ -840,6 +847,44 @@ displayModal = async (pkmnData) => {
 
     clearTagContent(modal_DOM.listSiblings);
     generatePokemonSiblingsUI(pkmnData);
+    
+    // Ajouter le lien vers Poképedia
+    const footerContainer = modal.querySelector('footer.modal-footer div');
+    const closeButton = modal.querySelector('[data-close-modal]');
+    
+    // Supprimer le lien existant s'il y en a un
+    const existingPokedexLink = modal.querySelector('[data-pokedex-link]');
+    if (existingPokedexLink) {
+        existingPokedexLink.remove();
+    }
+    
+    // Formater le nom pour l'URL (minuscules, sans accents, remplacer espaces par des tirets)
+    const formatNameForUrl = (name) => {
+        return name
+            .toLowerCase()
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .replace(/\s+/g, '-')
+            .replace(/[^a-z0-9-]/g, '');
+    };
+    
+    const pokedexUrl = `https://www.pokepedia.fr/${formatNameForUrl(pkmnData.name.fr)}`;
+    
+    // Créer le lien
+    const pokedexLink = document.createElement('a');
+    pokedexLink.href = pokedexUrl;
+    pokedexLink.target = "_blank";
+    pokedexLink.rel = "noopener noreferrer";
+    pokedexLink.className = "block rounded-md transition-colors text-center w-full mt-2 mb-2 p-2 border border-solid border-blue-600 bg-blue-100 text-blue-800 hocus:bg-blue-600 hocus:text-white ease-out";
+    pokedexLink.textContent = `Voir ${pkmnData.name.fr} sur Poképedia`;
+    pokedexLink.setAttribute('data-pokedex-link', '');
+    pokedexLink.setAttribute('data-testid', 'pokedex-link');
+    
+    // Insérer le lien avant le bouton de fermeture
+    if (footerContainer && closeButton) {
+        footerContainer.insertBefore(pokedexLink, closeButton);
+    }
+    
     modal.inert = false;
     modal.setAttribute("aria-busy", false);
 };
