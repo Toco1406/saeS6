@@ -7,6 +7,7 @@ import {
     fetchPokemon,
     fetchEvolutionChain,
     fetchAbilityData,
+    fetchTypeData,
 } from "#api";
 
 import {
@@ -19,7 +20,8 @@ import {
     getPkmnIdFromURL,
     formsNameDict,
     onTransitionsEnded,
-    NB_NUMBER_INTEGERS_PKMN_ID
+    NB_NUMBER_INTEGERS_PKMN_ID,
+    getRegionForName,
 } from "./utils";
 
 import {
@@ -96,6 +98,8 @@ const modal_DOM = {
     catchRate: modal.querySelector("[data-catch-rate]"),
     acronymVersions: modal.querySelector("[data-pkmn-acronym-versions]"),
     noEvolutionsText: modal.querySelector("[data-no-evolutions]"),
+    listNumRegional: modal.querySelector("[data-list-region]"),
+    nbNumRegional: modal.querySelector("[data-nb-region]"),
 };
 
 const dataCache = {};
@@ -265,8 +269,10 @@ displayModal = async (pkmnData) => {
     modal_DOM.img.src = loadingImage;
 
     const pkmnId = pkmnData?.alternate_form_id || pkmnData.pokedex_id;
+    const pkmnRegion = pkmnData?.alternate_form_id || pkmnData.pokedex_id;
 
     let pkmnExtraData = dataCache[pkmnId]?.extras;
+    let pkmnRegionalData = dataCache[pkmnId]?.regionalData;
     let listDescriptions = dataCache[pkmnId]?.descriptions;
     let evolutionLine = dataCache[pkmnId]?.evolutionLine;
     let listAbilities = dataCache[pkmnId]?.listAbilities;
@@ -299,8 +305,10 @@ displayModal = async (pkmnData) => {
 
         try {
             pkmnExtraData = await fetchPokemonDetails(pkmnId);
+            //pkmnRegionalData = await fetchTypeData(pkmnRegion);
         } catch (_e) {
             pkmnExtraData = {};
+            //pkmnRegionalData = {};
         }
 
         const listAbilitiesDescriptions = []
@@ -717,6 +725,26 @@ displayModal = async (pkmnData) => {
 
         modal_DOM.spritesContainer.append(listPokemonSpritesTemplate);
     });
+
+    clearTagContent(modal_DOM.listNumRegional);
+
+    const listNumRegional = [...listDescriptions.flavor_text_entries, ...pkmnExtraData.name].filter((value, index, self) =>
+        index === self.findIndex((t) => (
+            t.name === value.name
+        ))
+    )
+    .map((item) => ({...item, order: Object.keys(getRegionForName).findIndex((region) => item.name === region)}))
+    .sort((a, b) => Number(a.order) - Number(b.order));
+
+    listNumRegional.forEach((item) => {
+        const li = document.createElement("li");
+        const versionName = getRegionForName[item.name] || "Unknown";
+        li.textContent = versionName;
+
+        modal_DOM.listNumRegional.append(li);
+    });
+    modal_DOM.nbNumRegional.textContent = ` (${listNumRegional.length})`;
+    modal_DOM.listNumRegional.closest("details").inert = listNumRegional.length === 0;
 
     clearTagContent(modal_DOM.listGames);
 

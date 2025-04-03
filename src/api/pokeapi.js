@@ -36,3 +36,12 @@ export const fetchAbilityData = async (url) => {
     }
 }
 
+export const fetchTypeData = async (pkmnRegion) => {
+    try {
+        const req = await axios.get(`https://pokeapi.co/api/v2/region/${pkmnRegion}/`
+    );
+        return req.data;
+    } catch (error) {
+        throw new Error(error);
+    }
+}

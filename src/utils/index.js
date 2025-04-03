@@ -36,6 +36,19 @@ export const getVersionForName = {
     "legends-arceus": "Légendes Pokémon : Arceus",
 };
 
+export const getRegionForName = {
+    kanto: "Kanto",
+    johto: "Johto",
+    hoenn: "Hoenn",
+    sinnoh: "Sinnoh",
+    unova: "Unys",
+    kalos: "Kalos",
+    alola: "Alola",
+    galar: "Galar",
+    paldea: "Paldea",
+    "hisui-region": "Hisui",
+}
+
 export const cleanString = (string) =>
     string
         .toLowerCase()
