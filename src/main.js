@@ -358,7 +358,9 @@ export const observeURL = async () => {
         try {
             const pkmnData = await fetchPokemon(pkmnId, urlParams.get("region"));
             pkmnData.alternate_form_id = urlParams.get("alternate_form_id");
-
+            for(let i=2; i<= pkmnData.generation; i++ ){
+                await loadPokedexForGeneration(i)
+            }
             await loadPokemonData(pkmnData);
             modal.showModal();
         } catch (_e) {
@@ -370,8 +372,8 @@ export const observeURL = async () => {
     }
 }
 
-await observeURL();
 await loadPokedexForGeneration(1);
+await observeURL();
 
 delegateEventHandler(document, "click", "[data-load-generation]", (e) => {
     loadPokedexForGeneration(e.target.dataset.loadGeneration, e.target.dataset.selfDelete === "" ? e.target : null);
