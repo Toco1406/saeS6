@@ -16,6 +16,7 @@ import {
     POPOVER_ERRORS,
 } from "./utils";
 import { generationScrollingObserver, pokedexItemScrollingObserver, firstVisiblePkmn } from "./scroll-observer";
+import GitHubContributors from "./api/contributeurs";
 
 import ripple from '#src/worklets/ripple.js?url';
 import loadingImageRaw from "/images/loading.svg?raw";
@@ -411,5 +412,14 @@ window.addEventListener("offline", () => {
     errorPopover.dataset.error = POPOVER_ERRORS.lost_connection;
     errorPopover.showPopover();
 });
+
+// Initialisation des contributeurs GitHub
+const contributorsContainer = document.getElementById("github-contributors");
+if (contributorsContainer) {
+    const githubContributors = new GitHubContributors(contributorsContainer);
+    githubContributors.init().catch(error => {
+        console.error("Échec de l'initialisation des contributeurs GitHub:", error);
+    });
+}
 
 export { loadPokedexForGeneration };

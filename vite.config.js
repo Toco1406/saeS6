@@ -1,6 +1,13 @@
 import { defineConfig } from "vite";
 import vituum from "vituum";
 import eslint from "vite-plugin-eslint";
+import { config } from 'dotenv';
+
+// Charger les variables d'environnement du fichier .env
+config();
+
+// Récupère le token GitHub depuis les variables d'environnement
+const githubToken = process.env.GITHUB_TOKEN;
 
 export default defineConfig({
     base: "./",
@@ -27,9 +34,9 @@ export default defineConfig({
         "import.meta.env.VERSION": JSON.stringify(
             process.env.npm_package_version
         ),
+        "import.meta.env.GITHUB_TOKEN": JSON.stringify(githubToken),
     },
     server: {
-        // Expose the server to the network allowing access from ip address
         host: true,
         open: true,
     },

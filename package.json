@@ -19,6 +19,7 @@
         "@playwright/test": "^1.49.0",
         "@tailwindcss/postcss": "^4.0.0",
         "@types/node": "^22.10.1",
+        "dotenv": "^16.4.7",
         "eslint": "^9.16.0",
         "globals": "^15.13.0",
         "happy-dom": "^16.3.0",
