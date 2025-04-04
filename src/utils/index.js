@@ -37,6 +37,8 @@ export const getVersionForName = {
 };
 
 export const getRegionForName = {
+    national: "National",
+    "kalos-central": "Kalos Central",
     kanto: "Kanto",
     johto: "Johto",
     hoenn: "Hoenn",

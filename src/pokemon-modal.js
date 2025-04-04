@@ -721,9 +721,10 @@ displayModal = async (pkmnData) => {
         modal_DOM.spritesContainer.append(listPokemonSpritesTemplate);
     });
 
-    clearTagContent(modal_DOM.listNumRegional);
 
-    const listNumRegional = [ ...listDescriptions.pokedex_numbers, ...listDescriptions.flavor_text_entries].filter((value, index, self) =>
+    clearTagContent(modal_DOM.listNumRegional);
+    console.log(listDescriptions.pokedex_numbers)
+    const listNumRegional = [...listDescriptions.flavor_text_entries, ...listDescriptions.pokedex_numbers].filter((value, index, self) =>
         index === self.findIndex((t) => (
             t.pokedex === value.pokedex
         ))
@@ -731,15 +732,17 @@ displayModal = async (pkmnData) => {
     .map((item) => ({...item, order: Object.keys(getRegionForName).findIndex((entry_number) => item.pokedex === entry_number)}))
     .sort((a, b) => Number(a.order) - Number(b.order));
 
-    listNumRegional.forEach((item) => {
+    listDescriptions.pokedex_numbers.forEach((item) => {
         const li = document.createElement("li");
-        const NumRegional = getRegionForName[item.pokedex] || "Unknown";
-        li.textContent = NumRegional;
+        const NumRegional = getRegionForName[item.pokedex.name] || "Unknown";
+        li.textContent = ` ${item.entry_number} - ${NumRegional}`;
 
         modal_DOM.listNumRegional.append(li);
     });
+
     modal_DOM.nbNumRegional.textContent = ` (${listNumRegional.length})`;
     modal_DOM.listNumRegional.closest("details").inert = listNumRegional.length === 0;
+
 
     clearTagContent(modal_DOM.listGames);
 
