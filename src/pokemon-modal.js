@@ -7,7 +7,6 @@ import {
     fetchPokemon,
     fetchEvolutionChain,
     fetchAbilityData,
-    fetchTypeData,
 } from "#api";
 
 import {
@@ -269,10 +268,8 @@ displayModal = async (pkmnData) => {
     modal_DOM.img.src = loadingImage;
 
     const pkmnId = pkmnData?.alternate_form_id || pkmnData.pokedex_id;
-    const pkmnRegion = pkmnData?.alternate_form_id || pkmnData.pokedex_id;
 
     let pkmnExtraData = dataCache[pkmnId]?.extras;
-    let pkmnRegionalData = dataCache[pkmnId]?.regionalData;
     let listDescriptions = dataCache[pkmnId]?.descriptions;
     let evolutionLine = dataCache[pkmnId]?.evolutionLine;
     let listAbilities = dataCache[pkmnId]?.listAbilities;
@@ -305,10 +302,8 @@ displayModal = async (pkmnData) => {
 
         try {
             pkmnExtraData = await fetchPokemonDetails(pkmnId);
-            //pkmnRegionalData = await fetchTypeData(pkmnRegion);
         } catch (_e) {
             pkmnExtraData = {};
-            //pkmnRegionalData = {};
         }
 
         const listAbilitiesDescriptions = []
@@ -728,18 +723,18 @@ displayModal = async (pkmnData) => {
 
     clearTagContent(modal_DOM.listNumRegional);
 
-    const listNumRegional = [...listDescriptions.flavor_text_entries, ...pkmnExtraData.name].filter((value, index, self) =>
+    const listNumRegional = [ ...listDescriptions.pokedex_numbers, ...listDescriptions.flavor_text_entries].filter((value, index, self) =>
         index === self.findIndex((t) => (
-            t.name === value.name
+            t.pokedex === value.pokedex
         ))
     )
-    .map((item) => ({...item, order: Object.keys(getRegionForName).findIndex((region) => item.name === region)}))
+    .map((item) => ({...item, order: Object.keys(getRegionForName).findIndex((entry_number) => item.pokedex === entry_number)}))
     .sort((a, b) => Number(a.order) - Number(b.order));
 
     listNumRegional.forEach((item) => {
         const li = document.createElement("li");
-        const versionName = getRegionForName[item.name] || "Unknown";
-        li.textContent = versionName;
+        const NumRegional = getRegionForName[item.pokedex] || "Unknown";
+        li.textContent = NumRegional;
 
         modal_DOM.listNumRegional.append(li);
     });
