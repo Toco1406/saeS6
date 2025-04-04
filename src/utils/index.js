@@ -39,6 +39,19 @@ export const getVersionForName = {
 export const getRegionForName = {
     national: "National",
     "kalos-central": "Kalos Central",
+    "original-johto": "Johto (Original)",
+    "updated-johto": "Johto (Nouveau)",
+    "updated-unova": "Unys (Nouveau)",
+    "original-alola": "Alola (Original)",
+    "original-melemele": "Mele-Mele (Original)",
+    "updated-alola": "Alola (Nouveau)",
+    "updated-melemele": "Mele-Mele (Nouveau)",
+    "letsgo-kanto": "Kanto (evoli/pickachu)",
+    "original-poni": "Poni (Original)",
+    "updated-poni": "Poni (Nouveau)",
+    "original-sinnoh": "Sinnoh (Original)",
+    "updated-sinnoh": "Sinnoh (Nouveau)",
+    kitakami: "Kitakami",
     kanto: "Kanto",
     johto: "Johto",
     hoenn: "Hoenn",
@@ -48,7 +61,7 @@ export const getRegionForName = {
     alola: "Alola",
     galar: "Galar",
     paldea: "Paldea",
-    "hisui-region": "Hisui",
+    hisui: "Hisui",
 }
 
 export const cleanString = (string) =>
