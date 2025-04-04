@@ -19,7 +19,8 @@ import {
     getPkmnIdFromURL,
     formsNameDict,
     onTransitionsEnded,
-    NB_NUMBER_INTEGERS_PKMN_ID
+    NB_NUMBER_INTEGERS_PKMN_ID,
+    getRegionForName,
 } from "./utils";
 
 import {
@@ -98,6 +99,8 @@ const modal_DOM = {
     catchRate: modal.querySelector("[data-catch-rate]"),
     acronymVersions: modal.querySelector("[data-pkmn-acronym-versions]"),
     noEvolutionsText: modal.querySelector("[data-no-evolutions]"),
+    listNumRegional: modal.querySelector("[data-list-region]"),
+    nbNumRegional: modal.querySelector("[data-nb-region]"),
 };
 
 const dataCache = {};
@@ -724,6 +727,29 @@ displayModal = async (pkmnData) => {
 
         modal_DOM.spritesContainer.append(listPokemonSpritesTemplate);
     });
+
+
+    clearTagContent(modal_DOM.listNumRegional);
+    console.log(listDescriptions.pokedex_numbers)
+    const listNumRegional = [...listDescriptions.flavor_text_entries, ...listDescriptions.pokedex_numbers].filter((value, index, self) =>
+        index === self.findIndex((t) => (
+            t.pokedex === value.pokedex
+        ))
+    )
+    .map((item) => ({...item, order: Object.keys(getRegionForName).findIndex((entry_number) => item.pokedex === entry_number)}))
+    .sort((a, b) => Number(a.order) - Number(b.order));
+
+    listDescriptions.pokedex_numbers.forEach((item) => {
+        const li = document.createElement("li");
+        const NumRegional = getRegionForName[item.pokedex.name] || "Unknown";
+        li.textContent = ` ${item.entry_number} - ${NumRegional}`;
+
+        modal_DOM.listNumRegional.append(li);
+    });
+
+    modal_DOM.nbNumRegional.textContent = ` (${listNumRegional.length})`;
+    modal_DOM.listNumRegional.closest("details").inert = listNumRegional.length === 0;
+
 
     clearTagContent(modal_DOM.listGames);
 
