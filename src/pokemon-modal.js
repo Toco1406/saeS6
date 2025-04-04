@@ -723,7 +723,7 @@ displayModal = async (pkmnData) => {
 
 
     clearTagContent(modal_DOM.listNumRegional);
-    console.log(listDescriptions.pokedex_numbers)
+    
     const listNumRegional = [...listDescriptions.flavor_text_entries, ...listDescriptions.pokedex_numbers].filter((value, index, self) =>
         index === self.findIndex((t) => (
             t.pokedex === value.pokedex
@@ -742,7 +742,6 @@ displayModal = async (pkmnData) => {
 
     modal_DOM.nbNumRegional.textContent = ` (${listNumRegional.length})`;
     modal_DOM.listNumRegional.closest("details").inert = listNumRegional.length === 0;
-
 
     clearTagContent(modal_DOM.listGames);
 
@@ -763,6 +762,28 @@ displayModal = async (pkmnData) => {
     });
     modal_DOM.nbGames.textContent = ` (${listGames.length})`;
     modal_DOM.listGames.closest("details").inert = listGames.length === 0;
+    
+/*
+    clearTagContent(modal_DOM.listGames);
+
+    const listGames = [...listDescriptions.flavor_text_entries, ...pkmnExtraData.game_indices].filter((value, index, self) =>
+        index === self.findIndex((t) => (
+            t.version.name === value.version.name
+        ))
+    )
+    .map((item) => ({...item, order: Object.keys(getVersionForName).findIndex((game) => item.version.name === game)}))
+    .sort((a, b) => Number(a.order) - Number(b.order));
+
+    listGames.forEach((item) => {
+        const li = document.createElement("li");
+        const versionName = getVersionForName[item.version.name] || "Unknown";
+        li.textContent = versionName;
+
+        modal_DOM.listGames.append(li);
+    });
+    modal_DOM.nbGames.textContent = ` (${listGames.length})`;
+    modal_DOM.listGames.closest("details").inert = listGames.length === 0;
+*/
 
     const listRegions = ["alola", "hisui", "galar", "paldea"];
     let listNonRegionalForms = listDescriptions.varieties?.filter((item) => !item.is_default && !listRegions.some((region) => item.pokemon.name.includes(region))) || []
