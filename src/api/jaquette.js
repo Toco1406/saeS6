@@ -3,13 +3,27 @@ import multer, { memoryStorage } from 'multer';
 import pkg from 'pg';
 const { Pool } = pkg;
 import fs from 'fs';
+import sharp from 'sharp';
 
 const app = express();
 const port = 3000;
 
+app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5173'); // Autorise uniquement http://localhost:5173
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS'); // Autorise les méthodes HTTP
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization'); // Autorise les en-têtes spécifiques
+    res.setHeader('Access-Control-Allow-Credentials', 'true'); // Autorise les cookies si nécessaire
+    if (req.method === 'OPTIONS') {
+        return res.sendStatus(204); // Répond aux requêtes préliminaires CORS
+    }
+    next();
+});
+
 // Configuration de Multer pour gérer les uploads
-const storage = memoryStorage();
-const upload = multer({ storage });
+const upload = multer({
+    storage: memoryStorage(),
+    limits: { fileSize: 5 * 1024 * 1024 }, // Limite à 5 Mo
+});
 
 // Configuration de la base de données PostgreSQL
 const pool = new Pool({
@@ -23,13 +37,8 @@ const pool = new Pool({
 // Endpoint pour uploader une image
 app.post('/upload', upload.single('image'), async (req, res) => {
     try {
-        console.log('File received:', req.file);
-
         const { originalname, mimetype, buffer } = req.file;
-        console.log('Original name:', originalname);
-        console.log('MIME type:', mimetype);
 
-        // Insertion de l'image dans la base de données
         const query = `
             INSERT INTO jaquette (filename, type, data)
             VALUES ($1, $2, $3)
@@ -38,11 +47,10 @@ app.post('/upload', upload.single('image'), async (req, res) => {
         const values = [originalname, mimetype, buffer];
         const result = await pool.query(query, values);
 
-        console.log('Insert result:', result);
-        res.status(201).json({ message: 'Image uploaded successfully', imageId: result.rows[0].id });
+        res.status(201).json({ message: 'Image uploadée avec succès', imageId: result.rows[0].id });
     } catch (error) {
         console.error('Error uploading image:', error);
-        res.status(500).json({ message: 'Error uploading image' });
+        res.status(500).json({ message: 'Erreur lors de l\'upload de l\'image.' });
     }
 });
 

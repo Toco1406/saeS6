@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="UTF-8" />
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="theme-color" content="#0f172a" />
+    
+    <title>Upload Jaquette</title>
+    <script type="module" src="/src/main.js"></script>
+    <link data-favicon rel="shortcut icon" href="/favicon.png" type="image/png">
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <div class="bg-white shadow-md rounded-lg p-6 w-full max-w-2xl flex space-x-6">
+        <!-- Formulaire -->
+        <div class="w-1/2">
+            <h1 class="text-2xl font-bold text-center text-gray-800 mb-6">Uploader une Jaquette</h1>
+            <form id="uploadForm" enctype="multipart/form-data" class="space-y-4">
+                <div>
+                    <label for="image" class="block text-sm font-medium text-gray-700">Choisir une image :</label>
+                    <input type="file" id="image" name="image" accept="image/*" required
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                </div>
+                <button type="submit"
+                    class="w-full bg-blue-500 text-white font-medium py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                    Uploader
+                </button>
+            </form>
+            <p id="responseMessage" class="mt-4 text-center text-sm"></p>
+        </div>
+
+        <!-- Prévisualisation -->
+        <div class="w-1/2 flex items-center justify-center bg-gray-50 border border-gray-200 rounded-md">
+            <img id="preview" src="" alt="Prévisualisation" class="max-w-full max-h-64 hidden">
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('uploadForm');
+        const responseMessage = document.getElementById('responseMessage');
+        const fileInput = document.getElementById('image');
+        const preview = document.getElementById('preview');
+
+        // Prévisualisation de l'image
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    preview.src = event.target.result;
+                    preview.classList.remove('hidden');
+                };
+                reader.readAsDataURL(file);
+            } else {
+                preview.src = '';
+                preview.classList.add('hidden');
+            }
+        });
+
+        // Gestion de l'upload
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const formData = new FormData();
+            formData.append('image', fileInput.files[0]);
+
+            try {
+                const response = await fetch('http://localhost:3000/upload', {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+                responseMessage.textContent = `Image uploadée avec succès ! ID : ${result.imageId}`;
+                responseMessage.className = "text-green-500";
+            } catch (error) {
+                responseMessage.textContent = `Erreur lors de l'upload : ${error.message}`;
+                responseMessage.className = "text-red-500";
+            }
+        });
+    </script>
+</body>
+</html>
