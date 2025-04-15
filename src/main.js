@@ -97,6 +97,9 @@ const updatePokedexLayout = (_isGridLayout) => {
 
 updatePokedexLayout(isGridLayout);
 
+// Définir des constantes pour les "nombres magiques"
+const RIPPLE_ANIMATION_DURATION = 350; // Durée de l'animation en millisecondes
+const RANDOM_THRESHOLD = 0.5; // Seuil pour la condition aléatoire
 
 export const rippleEffect = (e, color = "#fff") => {
     return new Promise((resolve) => {
@@ -115,7 +118,7 @@ export const rippleEffect = (e, color = "#fff") => {
             const count = Math.floor(now - start);
             $el.style.cssText = `--ripple-x: ${x}; --ripple-y: ${y}; --animation-tick: ${count}; --ripple-color: ${color}`;
 
-            if (count > 350) {
+            if (count > RIPPLE_ANIMATION_DURATION) {
                 $el.classList.remove('animating');
                 $el.style.cssText = `--animation-tick: 0`;
 
@@ -142,7 +145,7 @@ const loadDetailsModal = async (e) => {
     const href = $el.href;
 
     $el.removeAttribute("href");
-    if (Math.random() > 0.5 && pkmnData.types[1]) {
+    if (Math.random() > RANDOM_THRESHOLD && pkmnData.types[1]) {
         rippleColor = window.getComputedStyle(document.body).getPropertyValue(`--type-${cleanString(pkmnData.types[1].name)}`);
     }
     await rippleEffect(e, rippleColor);

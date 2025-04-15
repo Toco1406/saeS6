@@ -54,6 +54,10 @@ if (typeof registerPaint !== "undefined") {
 
                 ctx.fillStyle = rippleColor;
                 let t = tick / speed;
+                
+                const TWO = 2; // Définir une constante pour éviter le "magic number"
+                const FULL_CIRCLE = TWO * Math.PI; // Utiliser la constante TWO
+
 
                 ctx.globalAlpha = 1 - (t * t);
                 ctx.beginPath();
@@ -62,7 +66,7 @@ if (typeof registerPaint !== "undefined") {
                     y,
                     (geom.width * tick) / speed, // radius
                     0, // startAngle
-                    2 * Math.PI // endAngle
+                    FULL_CIRCLE // endAngle
                 );
 
                 ctx.fill();
