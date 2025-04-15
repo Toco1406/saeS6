@@ -68,6 +68,8 @@ test("should load previous pokemon", async ({ page }) => {
         )
     ])
 
+    await expect(page.getByTestId("pokemon-modal")).toHaveAttribute("open", "");
+
     await page.getByTestId("previous-pkmn").first().click();
     const currentUrl = new URL(await page.url());
 
