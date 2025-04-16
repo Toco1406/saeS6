@@ -209,6 +209,8 @@ test("should have a label for all abilities after loading Pokémon and its Poké
 
     await page.getByTestId("close-modal").first().click();
 
+    await expect(modal).toBeHidden();
+
     const loadGenerationButton = await page.getByTestId("load-generation-btn").first()
     loadGenerationButton.click();
 
