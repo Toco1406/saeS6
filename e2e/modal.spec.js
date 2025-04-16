@@ -198,7 +198,8 @@ test("should have a label for all abilities after loading Pokémon and its Poké
     const pkmnId = 171;
     await page.goto(`/?id=${pkmnId}`);
 
-    const modal = page.locator("[data-testid='pokemon-modal'][open]");
+    const modalSelector = "[data-testid='pokemon-modal'][open]";
+    const modal = page.locator(modalSelector);
     await modal.waitFor();
 
     const listAbilities = await page.locator("[data-list-abilities] summary").all();
@@ -209,10 +210,10 @@ test("should have a label for all abilities after loading Pokémon and its Poké
 
     await page.getByTestId("close-modal").first().click();
 
-    await expect(modal).toBeHidden();
+    await page.waitForSelector(modalSelector, { state: "detached" });
 
-    const loadGenerationButton = await page.getByTestId("load-generation-btn").first()
-    loadGenerationButton.click();
+    const loadGenerationButton = page.getByTestId("load-generation-btn").first();
+    await loadGenerationButton.click();
 
     await page.getByTestId("pokemon").nth(170).click();
     await modal.waitFor();
