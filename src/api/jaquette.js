@@ -2,6 +2,7 @@ import express from 'express';
 import multer, { memoryStorage } from 'multer';
 import pkg from 'pg';
 const { Pool } = pkg;
+import axios from 'axios';
 import fs from 'fs';
 import sharp from 'sharp';
 
@@ -38,19 +39,32 @@ const pool = new Pool({
 app.post('/upload', upload.single('image'), async (req, res) => {
     try {
         const { originalname, mimetype, buffer } = req.file;
+        const { version } = req.body;
 
         const query = `
-            INSERT INTO jaquette (filename, type, data)
-            VALUES ($1, $2, $3)
+            INSERT INTO jaquette (filename, type, data, version)
+            VALUES ($1, $2, $3, $4)
             RETURNING id
         `;
-        const values = [originalname, mimetype, buffer];
+        const values = [originalname, mimetype, buffer, version];
         const result = await pool.query(query, values);
 
         res.status(201).json({ message: 'Image uploadée avec succès', imageId: result.rows[0].id });
     } catch (error) {
         console.error('Error uploading image:', error);
         res.status(500).json({ message: 'Erreur lors de l\'upload de l\'image.' });
+    }
+});
+
+app.get('/games', async (req, res) => {
+    try {
+        const query = 'SELECT version, data FROM jaquette';
+        const result = await pool.query(query);
+
+        res.status(200).json(result.rows); // Retourne les versions et les images
+    } catch (error) {
+        console.error('Erreur lors de la récupération des données :', error);
+        res.status(500).json({ message: 'Erreur lors de la récupération des données.' });
     }
 });
 

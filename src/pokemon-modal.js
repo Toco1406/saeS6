@@ -7,6 +7,7 @@ import {
     fetchPokemon,
     fetchEvolutionChain,
     fetchAbilityData,
+    fetchGameImages,
 } from "#api";
 
 import {
@@ -765,10 +766,27 @@ displayModal = async (pkmnData) => {
     .map((item) => ({...item, order: Object.keys(getVersionForName).findIndex((game) => item.version.name === game)}))
     .sort((a, b) => Number(a.order) - Number(b.order));
 
+    const gameImages = await fetchGameImages(); // Récupère les images des jeux depuis l'API
+
     listGames.forEach((item) => {
         const li = document.createElement("li");
         const versionName = getVersionForName[item.version.name] || "Unknown";
-        li.textContent = versionName;
+        
+        // Vérifie si une image existe pour ce jeu
+        const gameImage = gameImages.find((game) => game.version === item.version.name);
+
+        if (gameImage) {
+            // Si une image existe, affichez-la
+            const img = document.createElement("img");
+            img.src = `data:image/png;base64,${btoa(
+                new Uint8Array(gameImage.data.data).reduce((data, byte) => data + String.fromCharCode(byte), '')
+            )}`;
+            img.alt = versionName;
+            img.classList.add("w-16", "h-16", "rounded-md"); // Ajoutez des classes pour le style
+            li.appendChild(img);
+        } else {
+            li.textContent = versionName;
+        }
 
         modal_DOM.listGames.append(li);
     });

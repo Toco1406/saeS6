@@ -23,6 +23,13 @@
                     <input type="file" id="image" name="image" accept="image/*" required
                         class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
                 </div>
+                <div>
+                    <label for="version" class="block text-sm font-medium text-gray-700">Choisir une version :</label>
+                    <select id="version" name="version" required
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                        <!-- Les options seront ajoutées dynamiquement -->
+                    </select>
+                </div>
                 <button type="submit"
                     class="w-full bg-blue-500 text-white font-medium py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
                     Uploader
@@ -37,11 +44,22 @@
         </div>
     </div>
 
-    <script>
+    <script type="module">
+        import { getVersionForName } from './utils/index.js'; // Importer l'objet depuis utils/index.js
+
         const form = document.getElementById('uploadForm');
         const responseMessage = document.getElementById('responseMessage');
         const fileInput = document.getElementById('image');
         const preview = document.getElementById('preview');
+        const versionSelect = document.getElementById('version');
+
+        // Remplir la liste déroulante avec les données de getVersionForName
+        Object.entries(getVersionForName).forEach(([key, value]) => {
+            const option = document.createElement('option');
+            option.value = key; // La clé sera la valeur envoyée au backend
+            option.textContent = value; // Le texte affiché dans la liste
+            versionSelect.appendChild(option);
+        });
 
         // Prévisualisation de l'image
         fileInput.addEventListener('change', (e) => {
@@ -65,6 +83,7 @@
 
             const formData = new FormData();
             formData.append('image', fileInput.files[0]);
+            formData.append('version', versionSelect.value); // Ajouter la version sélectionnée
 
             try {
                 const response = await fetch('http://localhost:3000/upload', {
@@ -77,7 +96,7 @@
                 }
 
                 const result = await response.json();
-                responseMessage.textContent = `Image uploadée avec succès ! ID : ${result.imageId}`;
+                responseMessage.textContent = `Image uploadée avec succès !`;
                 responseMessage.className = "text-green-500";
             } catch (error) {
                 responseMessage.textContent = `Erreur lors de l'upload : ${error.message}`;
