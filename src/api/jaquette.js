@@ -35,18 +35,56 @@ const pool = new Pool({
     port: 5432,
 });
 
+const sanitizeFilename = (filename) => {
+    const fixEncoding = (str) => {
+        try {
+            return decodeURIComponent(escape(str));
+        } catch (e) {
+            return str;
+        }
+    };
+  
+    const parts = filename.split('.');
+    const ext = parts.pop().toLowerCase();
+    let name = fixEncoding(parts.join('.'));
+  
+    const accentMap = {
+        'À': 'A', 'Â': 'A', 'Ä': 'A',
+        'à': 'a', 'â': 'a', 'ä': 'a',
+        'Ç': 'C', 'ç': 'c',
+        'É': 'E', 'È': 'E', 'Ê': 'E', 'Ë': 'E',
+        'é': 'e', 'è': 'e', 'ê': 'e', 'ë': 'e',
+        'Î': 'I', 'Ï': 'I', 'î': 'i', 'ï': 'i',
+        'Ô': 'O', 'Ö': 'O', 'ô': 'o', 'ö': 'o',
+        'Ù': 'U', 'Û': 'U', 'Ü': 'U', 'ù': 'u', 'û': 'u', 'ü': 'u',
+        'Ÿ': 'Y', 'ÿ': 'y',
+        'Ñ': 'N', 'ñ': 'n',
+        'Œ': 'OE', 'œ': 'oe',
+        'Æ': 'AE', 'æ': 'ae',
+        "'": '-', '_': '-', ' ': '-'
+    };
+  
+    name = name.split('').map(char => accentMap[char] || char).join('');
+    name = name.toLowerCase();
+    name = name.replace(/[^a-z0-9-]/g, '');
+    name = name.replace(/-+/g, '-').replace(/^-|-$/g, '');
+  
+    return `${name}.${ext}`;
+};
+        
 // Endpoint pour uploader une image
 app.post('/upload', upload.single('image'), async (req, res) => {
     try {
         const { originalname, mimetype, buffer } = req.file;
         const { version } = req.body;
+        const sanitizedFilename = sanitizeFilename(originalname);
 
         const query = `
             INSERT INTO jaquette (filename, type, data, version)
             VALUES ($1, $2, $3, $4)
             RETURNING id
         `;
-        const values = [originalname, mimetype, buffer, version];
+        const values = [sanitizedFilename, mimetype, buffer, version];
         const result = await pool.query(query, values);
 
         res.status(201).json({ message: 'Image uploadée avec succès', imageId: result.rows[0].id });
