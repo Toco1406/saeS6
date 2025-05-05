@@ -7,7 +7,6 @@ on:
   push:
     branches:
       - main
-  workflow_dispatch:
 
 jobs:
   lint:
@@ -64,11 +63,8 @@ jobs:
       - name: Install Playwright dependencies
         run: npx playwright install-deps
 
-      - name: Install xvfb
-        run: sudo apt-get install xvfb
-      
       - name: Run E2E Tests
-        run: xvfb-run npx playwright test --ui
+        run: npx playwright test --ui --headless
 
   # migrate-db:
   #   name: Migrate Database
