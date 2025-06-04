@@ -17,14 +17,14 @@ jobs:
           cache: 'npm'
       - name: Install dependencies
         run: npm ci
-      - name: Run tests
-        run: npm test
+      - name: Run tests with coverage
+        run: npm run test:coverage
       - name: Upload test results
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: vitest-report
-          path: test-results/vitest-report.html
+          name: test-coverage
+          path: test-results/coverage
           retention-days: 7
 
   lint:
