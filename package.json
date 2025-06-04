@@ -9,7 +9,7 @@
         "back": "node src/api/jaquette.js",
         "test": "vitest",
         "test:e2e": "playwright test",
-        "build": "vite build && rsync -am --include='*.php' --include='**/*.php' --exclude='*' ./ dist/",
+        "build": "vite build",
         "lint": "npx eslint .",
         "preview": "vite preview",
         "e2e": "npx playwright test --ui",
