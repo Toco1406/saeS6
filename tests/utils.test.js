@@ -1,4 +1,11 @@
-import { expect, describe, it } from 'vitest';
+import { expect, describe, it, beforeAll } from 'vitest';
+
+// Mock document before imports
+beforeAll(() => {
+  global.document = {
+    querySelector: () => null
+  };
+});
 
 import { getVersionForName, cleanString, getEvolutionChain } from "#src/utils/index.js";
 
