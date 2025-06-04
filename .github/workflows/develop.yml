@@ -23,10 +23,8 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: test-results
-          path: |
-            test-results/
-            coverage/
+          name: vitest-report
+          path: test-results/vitest-report.html
           retention-days: 7
 
   lint:

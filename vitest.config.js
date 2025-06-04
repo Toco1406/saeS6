@@ -2,13 +2,12 @@ import { defineConfig } from 'vitest/config'
 
 export default defineConfig({
   test: {
-    reporters: ['default'],
-    coverage: {
-      reporter: ['text'],
-      reportsDirectory: './coverage'
-    },
+    environment: 'happy-dom',
     include: ['tests/**/*.test.js'],
-    exclude: ['**/node_modules/**'],
-    environment: 'happy-dom'
+    exclude: ['**/e2e/**', '**/node_modules/**'],
+    reporters: ['html', 'default'],
+    outputFile: {
+      html: './test-results/vitest-report.html'
+    }
   }
 }) 
