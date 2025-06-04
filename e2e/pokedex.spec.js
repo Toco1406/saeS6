@@ -109,14 +109,11 @@ test("should listen to query string params @smoke", async ({ page }) => {
     await firstPkmn.waitFor();
     await firstPkmn.click();
 
-    await expect(page.getByTestId("pokemon-modal")).toHaveAttribute("open", "");
+    await expect(page.getByTestId("pokemon-modal")).toHaveAttribute("open");
 
     await page.goBack();
 
-    await expect(page.getByTestId("pokemon-modal")).not.toHaveAttribute(
-        "open",
-        ""
-    );
+    await expect(page.getByTestId("pokemon-modal")).not.toHaveAttribute("open");
 });
 
 test("should indicate the right gen in the navigation shortcut", async ({
