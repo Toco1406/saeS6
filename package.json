@@ -37,7 +37,8 @@
         "express": "^5.1.0",
         "multer": "^1.4.5-lts.2",
         "pg": "^8.14.1",
-        "sharp": "^0.34.1"
+        "sharp": "^0.34.1",
+        "wavesurfer.js": "^7.9.5"
     },
     "imports": {
         "#src/*.js": "./src/*.js",

@@ -1,4 +1,5 @@
 import 'core-js/actual/object';
+import WaveSurfer from 'wavesurfer.js';
 
 import {
     fetchPokemonDetails,
@@ -169,14 +170,49 @@ modal.addEventListener("transitionend", (e) => {
 modalPulldownClose(modal, modal_DOM.topInfos, resetModalPosition);
 
 closeModalBtn.addEventListener("click", () => {
-    modal.style.removeProperty('translate');
-    modal.style.removeProperty('opacity');
-    modal.style.setProperty("--animation-speed", initialModalSpeed);
-    metaThemeColor.setAttribute("content", originalThemeColor);
+    if (wavesurfer) {
+        wavesurfer.destroy();
+        wavesurfer = null;
+    }
     modal.close();
+    document.title = initialPageTitle;
+    metaThemeColor.setAttribute("content", originalThemeColor);
 });
 
 let displayModal = null;
+
+let wavesurfer = null;
+
+const initWaveform = () => {
+    if (wavesurfer) {
+        wavesurfer.destroy();
+    }
+    
+    wavesurfer = WaveSurfer.create({
+        container: '#waveform',
+        waveColor: '#4B5563',
+        progressColor: '#1F2937',
+        cursorColor: '#1F2937',
+        barWidth: 2,
+        barRadius: 3,
+        cursorWidth: 1,
+        height: 100,
+        barGap: 3,
+        responsive: true,
+    });
+
+    const playPauseBtn = document.getElementById('play-pause');
+    if (playPauseBtn) {
+        playPauseBtn.addEventListener('click', () => {
+            wavesurfer.playPause();
+            playPauseBtn.textContent = wavesurfer.isPlaying() ? 'Pause' : 'Jouer';
+        });
+    }
+
+    wavesurfer.on('finish', () => {
+        playPauseBtn.textContent = 'Jouer';
+    });
+};
 
 const generatePokemonSiblingsUI = (pkmnData) => {
     const prevPokemon = listPokemon.find((item) => item?.pokedex_id === pkmnData.pokedex_id - 1) || {};
@@ -935,6 +971,14 @@ displayModal = async (pkmnData) => {
     
     modal.inert = false;
     modal.setAttribute("aria-busy", false);
+
+    // Initialiser le visualiseur sonore
+    initWaveform();
+
+    // Charger le cri du Pokémon
+    if (pkmnExtraData.cries?.latest) {
+        wavesurfer.load(pkmnExtraData.cries.latest);
+    }
 };
 
 window.addEventListener("pokedexLoaded", () => {
