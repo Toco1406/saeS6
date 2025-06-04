@@ -6,6 +6,8 @@ export default defineConfig({
     coverage: {
       reporter: ['text'],
       reportsDirectory: './coverage'
-    }
+    },
+    exclude: ['**/e2e/**', '**/node_modules/**'],
+    environment: 'happy-dom'
   }
 }) 
