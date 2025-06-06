@@ -28,11 +28,12 @@ const upload = multer({
 
 // Configuration de la base de données PostgreSQL
 const pool = new Pool({
-    user: 'postgres',
-    host: 'localhost',
-    database: 'jaquette',
-    password: 'Dromach30',
+    user: process.env.SUPABASE_USER,
+    host: process.env.SUPABASE_HOST,
+    database: process.env.SUPABASE_DATABASE,
+    password: process.env.SUPABASE_PASSWORD,
     port: 5432,
+    ssl: { rejectUnauthorized: false },
 });
 
 const sanitizeFilename = (filename) => {
