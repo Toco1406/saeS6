@@ -10,11 +10,13 @@
         "test": "vitest run",
         "test:watch": "vitest",
         "test:e2e": "playwright test",
+        "test:coverage": "vitest run --coverage",
         "build": "vite build",
         "lint": "npx eslint .",
         "preview": "vite preview",
         "e2e": "npx playwright test --ui",
-        "migrate": "node src/api/migrate.js"
+        "migrate": "node src/api/migrate.js",
+        "deploy": "vercel deploy --prod"
     },
     "devDependencies": {
         "@babel/core": "^7.26.0",

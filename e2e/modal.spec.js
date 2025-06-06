@@ -22,11 +22,12 @@ test("should close modal", async ({ page }) => {
     );
 
     await page.locator("[data-pokemon-data][open]").waitFor()
-    await expect(page.getByTestId("pokemon-modal")).toHaveAttribute("open", "");
+    await expect(page.getByTestId("pokemon-modal")).toHaveAttribute("open");
 
     await page.getByTestId("close-modal").first().click();
-    await expect(page.getByTestId("pokemon-modal")).not.toHaveAttribute("open", "");
+    await expect(page.getByTestId("pokemon-modal")).not.toHaveAttribute("open");
 
+    await page.waitForURL(url => !url.searchParams.has('id'));
     const currentUrl = new URL(await page.url());
     await expect(Array.from(currentUrl.searchParams.values())).toHaveLength(0);
 });

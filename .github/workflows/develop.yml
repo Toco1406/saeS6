@@ -17,16 +17,16 @@ jobs:
           cache: 'npm'
       - name: Install dependencies
         run: npm ci
-      - name: Run tests
-        run: npm test
+      - name: Install coverage package
+        run: npm install -D @vitest/coverage-v8@2.1.8
+      - name: Run tests with coverage
+        run: npm run test:coverage
       - name: Upload test results
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: test-results
-          path: |
-            test-results/
-            coverage/
+          name: test-coverage
+          path: test-results/coverage
           retention-days: 7
 
   lint:
@@ -61,11 +61,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-      - name: Install dependencies
-        run: npm ci
       - name: Deploy to Vercel
-        run: npm run deploy 
+        uses: amondnet/vercel-action@v20
+        with:
+          vercel-token: ${{ secrets.DEPLOY_TOKEN }}
+          vercel-args: '--prod --yes' 
