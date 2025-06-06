@@ -150,3 +150,13 @@ const createTableQuery = `
 pool.query(createTableQuery)
     .then(() => console.log('Table "jaquette" vérifiée ou créée avec succès.'))
     .catch((error) => console.error('Erreur lors de la création de la table "jaquette" :', error));
+
+// Test de connexion à la base de données Supabase
+pool.connect()
+    .then(client => {
+        console.log('✅ Connexion à la base de données Supabase réussie !');
+        client.release();
+    })
+    .catch(err => {
+        console.error('❌ Échec de la connexion à la base de données Supabase :', err);
+    });
