@@ -35,7 +35,7 @@ form.addEventListener('submit', async (e) => {
     formData.append('version', versionSelect.value);
 
     try {
-        const response = await fetch('http://localhost:3000/upload', {
+        const response = await fetch('https://sae-s6.vercel.app/upload', {
             method: 'POST',
             body: formData,
         });
