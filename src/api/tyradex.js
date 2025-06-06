@@ -38,8 +38,8 @@ export const fetchAllTypes = async () => {
 
 export const fetchGameImages = async () => {
     try {
-        const response = await axios.get(`http://localhost:3000/games`);
-        return response.data; // Retourne les données sous forme d'objet
+        const response = await axios.get(`https://tyradex.vercel.app/api/v1/games`);
+        return response.data;
     } catch (error) {
         console.error('Erreur lors de la récupération des images des jeux :', error.message);
         return [];
