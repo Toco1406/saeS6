@@ -9,6 +9,11 @@ export default defineConfig({
     coverage: {
       reporter: ['html', 'text'],
       reportsDirectory: './coverage'
-    }
+    },
+    exclude: [
+      'e2e/**',
+      'node_modules/**',
+      'dist/**',
+    ]
   }
-}) 
+})
