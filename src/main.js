@@ -22,7 +22,6 @@ import ripple from '#src/worklets/ripple.js?url';
 import loadingImageRaw from "/images/loading.svg?raw";
 
 import "#src/window-events.js";
-import "#src/upload.js";
 
 import "#src/styles/main.css";
 
