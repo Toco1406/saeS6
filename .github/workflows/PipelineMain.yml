@@ -69,9 +69,6 @@ jobs:
       - name: Run E2E Tests
         run: npx playwright test
 
-      - name: Retry E2E Tests
-        run: npx playwright test --retry=2
-
       - name: Enable Playwright Tracing
         run: npx playwright test --trace on
 
