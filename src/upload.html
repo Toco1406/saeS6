@@ -10,6 +10,7 @@
     
     <title>Upload Jaquette</title>
     <script type="module" src="/src/main.js"></script>
+    <script type="module" src="/src/upload.js"></script>
     <link data-favicon rel="shortcut icon" href="/favicon.png" type="image/png">
 </head>
 <body class="bg-gray-100 flex items-center justify-center min-h-screen">
@@ -43,66 +44,5 @@
             <img id="preview" src="" alt="Prévisualisation" class="max-w-full max-h-64 hidden">
         </div>
     </div>
-
-    <script type="module">
-        import { getVersionForName } from './utils/index.js'; // Importer l'objet depuis utils/index.js
-
-        const form = document.getElementById('uploadForm');
-        const responseMessage = document.getElementById('responseMessage');
-        const fileInput = document.getElementById('image');
-        const preview = document.getElementById('preview');
-        const versionSelect = document.getElementById('version');
-
-        // Remplir la liste déroulante avec les données de getVersionForName
-        Object.entries(getVersionForName).forEach(([key, value]) => {
-            const option = document.createElement('option');
-            option.value = key; // La clé sera la valeur envoyée au backend
-            option.textContent = value; // Le texte affiché dans la liste
-            versionSelect.appendChild(option);
-        });
-
-        // Prévisualisation de l'image
-        fileInput.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = (event) => {
-                    preview.src = event.target.result;
-                    preview.classList.remove('hidden');
-                };
-                reader.readAsDataURL(file);
-            } else {
-                preview.src = '';
-                preview.classList.add('hidden');
-            }
-        });
-
-        // Gestion de l'upload
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-
-            const formData = new FormData();
-            formData.append('image', fileInput.files[0]);
-            formData.append('version', versionSelect.value); // Ajouter la version sélectionnée
-
-            try {
-                const response = await fetch('http://localhost:3000/upload', {
-                    method: 'POST',
-                    body: formData,
-                });
-
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
-                const result = await response.json();
-                responseMessage.textContent = `Image uploadée avec succès !`;
-                responseMessage.className = "text-green-500";
-            } catch (error) {
-                responseMessage.textContent = `Erreur lors de l'upload : ${error.message}`;
-                responseMessage.className = "text-red-500";
-            }
-        });
-    </script>
 </body>
 </html>
