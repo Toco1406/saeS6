@@ -111,6 +111,12 @@ test("should listen to query string params @smoke", async ({ page }) => {
 
     await expect(page.getByTestId("pokemon-modal")).toHaveAttribute("open", "");
 
+    const modal = await page.getByTestId("pokemon-modal");
+    console.log("Modal attributes:", await modal.getAttribute("open"));
+    
+    await expect(modal).toBeVisible();
+    await expect(modal).toHaveAttribute("open", "");
+
     await page.goBack();
 
     await expect(page.getByTestId("pokemon-modal")).not.toHaveAttribute(
