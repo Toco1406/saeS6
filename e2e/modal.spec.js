@@ -94,6 +94,16 @@ test("should open regional form", async ({ page }) => {
     ])
 
     await expect(page.getByTestId("pokemon-modal")).toHaveAttribute("open", "");
+    
+    const modal = await page.getByTestId("pokemon-modal");
+    const regionalForm = await page.getByTestId("regional-forms").first();
+
+    console.log("Modal attributes:", await modal.getAttribute("open"));
+    console.log("Regional form attributes:", await regionalForm.getAttribute("href"));
+    
+    await expect(modal).toBeVisible();
+    await expect(modal).toHaveAttribute("open", "");
+
     await page.getByTestId("regional-forms").first().click();
     const firstRegionalPokemon = await page.getByTestId("regional-forms").getByTestId("pokemon").first();
     const firstRegionalPokemonURL = new URL(await firstRegionalPokemon.getAttribute("href"));
@@ -148,7 +158,7 @@ test("should cache dex's data", async ({ page }) => {
 
     await page.getByTestId("previous-pkmn").first().click();
 
-    const dexRequest = page.waitForResponse("https://tyradex.vercel.app/api/v1/gen/1", { timeout: 5000 });
+    const dexRequest = page.waitForResponse("https://tyradex.vercel.app/api/v1/gen/1", { timeout: 10000 });
     try {
         await dexRequest;
     } catch {
@@ -173,7 +183,7 @@ test("should cache pokemon's data", async ({ page }) => {
     await page.getByTestId("previous-pkmn").first().click();
     await page.getByTestId("next-pkmn").first().click();
 
-    const pkmnRequest = page.waitForResponse(`https://pokeapi.co/api/v2/pokemon/${pkmnId}`, { timeout: 5000 });
+    const pkmnRequest = page.waitForResponse(`https://pokeapi.co/api/v2/pokemon/${pkmnId}`, { timeout: 10000 });
     try {
         await pkmnRequest;
     } catch {

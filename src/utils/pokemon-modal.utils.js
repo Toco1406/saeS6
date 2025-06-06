@@ -7,9 +7,12 @@ import {
 
 import loadingImageRaw from "/images/loading.svg?raw";
 
-export const pkmnHighlightTemplateRaw = document.querySelector(
-    "[data-tpl-id='pokemon-highlight']"
-);
+export const getPkmnHighlightTemplateRaw = () => {
+    if (typeof document !== "undefined") {
+        return document.querySelector("[data-tpl-id='pokemon-highlight']");
+    }
+    return null;
+};
 
 export const createSensibility = async (template, data, listTypes) => {
     const typeData = listTypes.find(
@@ -61,7 +64,7 @@ export const createSensibility = async (template, data, listTypes) => {
         data.multiplier === superEffectiveDamageMultiplier
     ) {
         const cloneHighlight = document.importNode(
-            pkmnHighlightTemplateRaw.content,
+            getPkmnHighlightTemplateRaw().content,
             true
         );
         const isTypeEffectiveAgainst =

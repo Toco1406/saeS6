@@ -28,11 +28,12 @@ const upload = multer({
 
 // Configuration de la base de données PostgreSQL
 const pool = new Pool({
-    user: 'postgres',
-    host: 'localhost',
-    database: 'jaquette',
-    password: 'Dromach30',
+    user: process.env.SUPABASE_USER,
+    host: process.env.SUPABASE_HOST,
+    database: process.env.SUPABASE_DATABASE,
+    password: process.env.SUPABASE_PASSWORD,
     port: 5432,
+    ssl: { rejectUnauthorized: false },
 });
 
 const sanitizeFilename = (filename) => {
@@ -133,3 +134,29 @@ app.get('/image/:id', async (req, res) => {
 app.listen(port, () => {
     console.log(`Server running on http://localhost:${port}`);
 });
+
+// Création de la table jaquette
+const createTableQuery = `
+    CREATE TABLE IF NOT EXISTS jaquette (
+        id SERIAL PRIMARY KEY,
+        filename VARCHAR(255) NOT NULL,
+        type VARCHAR(100) NOT NULL,
+        data BYTEA NOT NULL,
+        version VARCHAR(50) NOT NULL,
+        uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+`;
+
+pool.query(createTableQuery)
+    .then(() => console.log('Table "jaquette" vérifiée ou créée avec succès.'))
+    .catch((error) => console.error('Erreur lors de la création de la table "jaquette" :', error));
+
+// Test de connexion à la base de données Supabase
+pool.connect()
+    .then(client => {
+        console.log('✅ Connexion à la base de données Supabase réussie !');
+        client.release();
+    })
+    .catch(err => {
+        console.error('❌ Échec de la connexion à la base de données Supabase :', err);
+    });

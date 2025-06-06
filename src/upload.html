@@ -10,6 +10,7 @@
     
     <title>Upload Jaquette</title>
     <script type="module" src="/src/main.js"></script>
+    <script type="module" src="/src/upload.js"></script>
     <link data-favicon rel="shortcut icon" href="/favicon.png" type="image/png">
 </head>
 <body class="bg-gray-100 flex items-center justify-center min-h-screen">
@@ -27,7 +28,41 @@
                     <label for="version" class="block text-sm font-medium text-gray-700">Choisir une version :</label>
                     <select id="version" name="version" required
                         class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-                        <!-- Les options seront ajoutées dynamiquement -->
+                        <option value="red">Pokémon Rouge</option>
+                        <option value="blue">Pokémon Bleue</option>
+                        <option value="yellow">Pokémon Jaune</option>
+                        <option value="gold">Pokémon Or</option>
+                        <option value="silver">Pokémon Argent</option>
+                        <option value="crystal">Pokémon Crystal</option>
+                        <option value="sapphire">Pokémon Saphir</option>
+                        <option value="ruby">Pokémon Rubis</option>
+                        <option value="emerald">Pokémon Émeraude</option>
+                        <option value="firered">Pokémon Rouge feu</option>
+                        <option value="leafgreen">Pokémon Vert feuille</option>
+                        <option value="diamond">Pokémon Diamant</option>
+                        <option value="pearl">Pokémon Perle</option>
+                        <option value="platinum">Pokémon Platine</option>
+                        <option value="heartgold">Pokémon Or HeartGold</option>
+                        <option value="soulsilver">Pokémon Argent SoulSilver</option>
+                        <option value="white">Pokémon Blanche</option>
+                        <option value="black">Pokémon Noire</option>
+                        <option value="black-2">Pokémon Noire 2</option>
+                        <option value="white-2">Pokémon Blanche 2</option>
+                        <option value="x">Pokémon X</option>
+                        <option value="y">Pokémon Y</option>
+                        <option value="omega-ruby">Pokémon Rubis Oméga</option>
+                        <option value="ultra-sun">Pokémon Ultra-Soleil</option>
+                        <option value="sun">Pokémon Soleil</option>
+                        <option value="moon">Pokémon Lune</option>
+                        <option value="ultra-moon">Pokémon Ultra-Lune</option>
+                        <option value="alpha-sapphire">Pokémon Saphir Alpha</option>
+                        <option value="sword">Pokémon Épée</option>
+                        <option value="shield">Pokémon Bouclier</option>
+                        <option value="violet">Pokémon Violet</option>
+                        <option value="scarlet">Pokémon Écarlate</option>
+                        <option value="lets-go-eevee">Pokémon Let's Go, Évoli</option>
+                        <option value="lets-go-pikachu">Pokémon Let's Go, Pikachu</option>
+                        <option value="legends-arceus">Légendes Pokémon : Arceus</option>
                     </select>
                 </div>
                 <button type="submit"
@@ -43,66 +78,5 @@
             <img id="preview" src="" alt="Prévisualisation" class="max-w-full max-h-64 hidden">
         </div>
     </div>
-
-    <script type="module">
-        import { getVersionForName } from './utils/index.js'; // Importer l'objet depuis utils/index.js
-
-        const form = document.getElementById('uploadForm');
-        const responseMessage = document.getElementById('responseMessage');
-        const fileInput = document.getElementById('image');
-        const preview = document.getElementById('preview');
-        const versionSelect = document.getElementById('version');
-
-        // Remplir la liste déroulante avec les données de getVersionForName
-        Object.entries(getVersionForName).forEach(([key, value]) => {
-            const option = document.createElement('option');
-            option.value = key; // La clé sera la valeur envoyée au backend
-            option.textContent = value; // Le texte affiché dans la liste
-            versionSelect.appendChild(option);
-        });
-
-        // Prévisualisation de l'image
-        fileInput.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = (event) => {
-                    preview.src = event.target.result;
-                    preview.classList.remove('hidden');
-                };
-                reader.readAsDataURL(file);
-            } else {
-                preview.src = '';
-                preview.classList.add('hidden');
-            }
-        });
-
-        // Gestion de l'upload
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-
-            const formData = new FormData();
-            formData.append('image', fileInput.files[0]);
-            formData.append('version', versionSelect.value); // Ajouter la version sélectionnée
-
-            try {
-                const response = await fetch('http://localhost:3000/upload', {
-                    method: 'POST',
-                    body: formData,
-                });
-
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
-                const result = await response.json();
-                responseMessage.textContent = `Image uploadée avec succès !`;
-                responseMessage.className = "text-green-500";
-            } catch (error) {
-                responseMessage.textContent = `Erreur lors de l'upload : ${error.message}`;
-                responseMessage.className = "text-red-500";
-            }
-        });
-    </script>
 </body>
 </html>

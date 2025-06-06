@@ -9,6 +9,8 @@ import {
     fetchEvolutionChain,
     fetchAbilityData,
     fetchGameImages,
+    fetchPokemonCards,
+    fetchCardDetails,
 } from "#api";
 
 import {
@@ -103,6 +105,8 @@ const modal_DOM = {
     noEvolutionsText: modal.querySelector("[data-no-evolutions]"),
     listNumRegional: modal.querySelector("[data-list-region]"),
     nbNumRegional: modal.querySelector("[data-nb-region]"),
+    tcgCards: modal.querySelector("[data-tcg-cards]"),
+    tcgCardsCount: modal.querySelector("[data-tcg-cards-count]"),
 };
 
 const dataCache = {};
@@ -383,12 +387,32 @@ displayModal = async (pkmnData) => {
 
         listAbilitiesCache = Array.from(new Set(listAbilitiesCache.map((item) => JSON.stringify(item)))).map((item) => JSON.parse(item));
 
-        dataCache[pkmnId] = {
-            descriptions: listDescriptions,
-            extras: pkmnExtraData,
-            evolutionLine,
-            listAbilities,
-        };
+        try {
+            const tcgCards = await fetchPokemonCards(pkmnData.name.en);
+            if (!dataCache[pkmnId]) {
+                dataCache[pkmnId] = {};
+            }
+            dataCache[pkmnId] = {
+                ...dataCache[pkmnId],
+                tcgCards: tcgCards,
+                descriptions: listDescriptions,
+                extras: pkmnExtraData,
+                evolutionLine,
+                listAbilities,
+            };
+        } catch (_e) {
+            if (!dataCache[pkmnId]) {
+                dataCache[pkmnId] = {};
+            }
+            dataCache[pkmnId] = {
+                ...dataCache[pkmnId],
+                tcgCards: [],
+                descriptions: listDescriptions,
+                extras: pkmnExtraData,
+                evolutionLine,
+                listAbilities,
+            };
+        }
     }
 
     modal.style.setProperty("--background-sprite", `url("${pkmnExtraData.sprites.other["official-artwork"].front_default}")`);
@@ -924,6 +948,84 @@ displayModal = async (pkmnData) => {
 
     modal_DOM.statistics.append(statName);
     modal_DOM.statistics.append(statValue);
+
+    // Afficher les cartes TCG
+    clearTagContent(modal_DOM.tcgCards);
+    const tcgCards = dataCache[pkmnId]?.tcgCards || [];
+    console.log(`Affichage des cartes TCG pour ${pkmnData.name.fr}:`, tcgCards);
+    
+    // Créer l'élément details pour les cartes TCG
+    const tcgDetails = document.createElement("details");
+    tcgDetails.className = "mt-3";
+    
+    // Créer le summary
+    const tcgSummary = document.createElement("summary");
+    tcgSummary.className = "hocus:marker:text-(color:--bg-modal-color) font-bold text-xl";
+    tcgSummary.textContent = `Cartes TCG (${tcgCards.length})`;
+    
+    // Créer le conteneur pour les cartes
+    const cardsContainer = document.createElement("div");
+    cardsContainer.className = "mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-70";
+    
+    if (tcgCards.length > 0) {
+        tcgCards.forEach(card => {
+            try {
+                console.log("Données de la carte:", card);
+                const cardElement = document.createElement("div");
+                cardElement.className = "flex flex-col items-center p-6 border rounded-lg hover:shadow-lg transition-shadow cursor-pointer bg-white w-[280px] mx-auto mb-8";
+                
+                const img = document.createElement("img");
+                img.className = "w-full h-auto rounded-lg min-w-[180px] min-h-[180px] object-contain";
+                console.log("URL de l'image:", card.image);
+                
+                if (card.image) {
+                    img.src = card.image;
+                    img.alt = card.name;
+                } else {
+                    img.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' fill='%23f3f4f6'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='18' fill='%236b7280'%3ECarte non disponible%3C/text%3E%3C/svg%3E";
+                    img.alt = "Image non disponible";
+                }
+                
+                const name = document.createElement("p");
+                name.textContent = card.name;
+                name.className = "mt-6 font-medium text-center text-lg";
+                
+                const setName = document.createElement("p");
+                setName.textContent = card.set?.name || "Set inconnu";
+                setName.className = "text-base text-gray-500 text-center mt-3";
+                
+                cardElement.appendChild(img);
+                cardElement.appendChild(name);
+                cardElement.appendChild(setName);
+                
+                cardElement.addEventListener("click", async () => {
+                    try {
+                        console.log(`Chargement des détails pour la carte ${card.id}...`);
+                        const cardDetails = await fetchCardDetails(card.id);
+                        console.log(`Détails de la carte ${card.id}:`, cardDetails);
+                        if (cardDetails) {
+                            alert(`Détails de la carte:\nNom: ${cardDetails.name}\nSet: ${cardDetails.set?.name || "Inconnu"}\nNuméro: ${cardDetails.number || "N/A"}\nRareté: ${cardDetails.rarity || "N/A"}`);
+                        } else {
+                            alert("Impossible de charger les détails de la carte.");
+                        }
+                    } catch (error) {
+                        console.error(`Erreur lors du chargement des détails de la carte ${card.id}:`, error);
+                        alert("Impossible de charger les détails de la carte. Veuillez réessayer plus tard.");
+                    }
+                });
+                
+                cardsContainer.appendChild(cardElement);
+            } catch (error) {
+                console.error(`Erreur lors de l'affichage de la carte ${card.name}:`, error);
+            }
+        });
+    } else {
+        console.log(`Aucune carte TCG trouvée pour ${pkmnData.name.fr}`);
+    }
+    
+    tcgDetails.appendChild(tcgSummary);
+    tcgDetails.appendChild(cardsContainer);
+    modal_DOM.tcgCards.appendChild(tcgDetails);
 
     console.log("Current Pokemon's data", pkmnData);
 
